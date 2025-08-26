@@ -1,0 +1,50 @@
+
+/* 
+gameBoard IIFE module:
+CAPTION: holds details about the GameBoard and can provide information about its
+state. 
+
+MODULE RECEIVES nothing
+
+PRIVATE grid GETS 3x3 array containing null  // null explicitly signals absence of value
+PRIVATE player1Mark;
+PRIVATE player2Mark;
+SET winningConfigs TO ARRAY OF
+    [*,*,*, , , , , , ], 
+    [ , , ,*,*,*, , , ],
+    [ , , , , , ,*,*,*],
+    [*, , ,*, , ,*, , ],
+    [ ,*, , ,*, , ,*, ],
+    [ , ,*, , ,*, , ,*],
+    [*, , , ,*, , , ,*],
+    [ , ,*, ,*, ,*, , ]
+
+PUBLIC FUNC setPlayerMarkers RECEIVES mark1, mark2 DOES
+    IF grid is non-empty (check by calling isBlank) DO THROW ERROR "can only set markers when grid is empty"
+    IF mark1 === mark2 THROW ERROR "player markers have to be different"
+    SET player1Mark TO mark1
+    SET player2Mark TO mark2
+PUBLIC FUNC getPlayerMarkers RECEIVES nothing 
+    RETURNS {player1Mark, player2Mark}
+
+PUBLIC FUNC isBlank RECEIVES indices i,j RETURNS if specified cell is null
+PUBLIC FUNC placeMark RECEIVES indices i,j and marker DOES
+    PUT marker in grid[i][j] // no collision checks, that's up to the game controller
+    RETURNS nothing
+
+PUBLIC FUNC getGameWinner RECEIVES nothing DOES
+    CHECK if player 1 won
+    IF player 1 not win, check player 2
+    IF player 2 not win, check tie by CALLING isGameTied
+
+    RETURNS one of player1Mark, player2Mark, or null
+
+PUBLIC FUNC isGameTied DOES
+    RETURNS if each grid cell is occupied and getGameWinner is null
+
+PUBLIC FUNC resetBoard RECEIVES nothing DOES
+    FOR EACH cell IN grid, PUT null
+
+RETURN as module:
+    the public functions above
+*/
