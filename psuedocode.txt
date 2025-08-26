@@ -7,8 +7,6 @@ state.
 MODULE RECEIVES nothing
 
 PRIVATE grid GETS 3x3 array containing null  // null explicitly signals absence of value
-PRIVATE player1Mark;
-PRIVATE player2Mark;
 SET winningConfigs TO ARRAY OF
     [*,*,*, , , , , , ], 
     [ , , ,*,*,*, , , ],
@@ -18,33 +16,120 @@ SET winningConfigs TO ARRAY OF
     [ , ,*, , ,*, , ,*],
     [*, , , ,*, , , ,*],
     [ , ,*, ,*, ,*, , ]
+PRIVATE CONSTANT MARKER_X gets 'x'
+PRIVATE CONSTANT MARKER_O gets 'o'
+PRIVATE CONSTANT TIE gets 'tie'
+PRIVATE CONSTANT ONGOING gets 'ongoing;
 
-PUBLIC FUNC setPlayerMarkers RECEIVES mark1, mark2 DOES
-    IF grid is non-empty (check by calling isBlank) DO THROW ERROR "can only set markers when grid is empty"
-    IF mark1 === mark2 THROW ERROR "player markers have to be different"
-    SET player1Mark TO mark1
-    SET player2Mark TO mark2
-PUBLIC FUNC getPlayerMarkers RECEIVES nothing 
-    RETURNS {player1Mark, player2Mark}
+PRIVATE winner GETS null;
+PRIVATE numMarks GETS 0
 
 PUBLIC FUNC isBlank RECEIVES indices i,j RETURNS if specified cell is null
 PUBLIC FUNC placeMark RECEIVES indices i,j and marker DOES
-    PUT marker in grid[i][j] // no collision checks, that's up to the game controller
+    IF isBlank(i,j)  // a check happens here but the game controller should check as well
+        PUT marker in grid[i][j] 
+        INCREMENT numMarks
+    ELSE
+        THROW ERROR
+
     RETURNS nothing
 
-PUBLIC FUNC getGameWinner RECEIVES nothing DOES
-    CHECK if player 1 won
-    IF player 1 not win, check player 2
-    IF player 2 not win, check tie by CALLING isGameTied
+// Returns one of: 'x', 'o', TIE or ONGOING
+PUBLIC FUNC getGameState RECEIVES nothing DOES
+    CALL getGameWinner and store result
+    IF result non-null: RETURN the winning marker
+    ELSE: CALL isTie and RETURN either TIE or ONGOING
+    
+PRIVATE FUNC getGameWinner RECEIVES nothing DOES
+    CHECK if either marker has won by comparing against winningConfigs
+    IF neither won, winner will be null
+    RETURNS one of MARKER_X, MARKER_O, or null
 
-    RETURNS one of player1Mark, player2Mark, or null
-
-PUBLIC FUNC isGameTied DOES
-    RETURNS if each grid cell is occupied and getGameWinner is null
+PRIVATE FUNC isTie RECEIVES nothing DOES // a tie is defined as board filled and no winner
+    IF (winner is null) AND (numMarks === 9) RETURN TRUE
+    ELSE RETURN FALSE
 
 PUBLIC FUNC resetBoard RECEIVES nothing DOES
     FOR EACH cell IN grid, PUT null
+    SET numMarks to 0
 
 RETURN as module:
-    the public functions above
+    the public stuff
+*/
+
+
+/*
+CreatePlayer factory function:
+CAPTION:
+
+RECEIVES: playerName, playerMarker
+
+PRIVATE name = playerName;
+PRIVATE marker = playerMaker
+
+PUBLIC FUNC getName () {
+    RETURNS name
+}
+PUBLIC FUNC getMarker () {
+    RETURNS marker
+}
+// no setters since don't want these properties to be modified
+
+RETURN {
+    the public stuff
+}
+*/
+
+/*
+GameFlow IIFE module:
+CAPTION: Logic responsible for allowing players to make a choice, calling GameBoard's methods. 
+will print to console in the console version of the game. 
+MODULE RECEIVES nothing (no dependencies)
+
+PRIVATE let playerTurn GETS null;
+PRIVATE let player1;
+PRIVATE let player2;
+PRIVATE let result = null; // one of null, 'x', 'o', or 'tie' (as enumerated by GameBoard.getGameState)
+
+// activated by a 'Start Game' button
+PUBLIC FUNC playGame RECEIVES nothing DOES 
+    CALL createPlayers()
+    WHILE !result:
+        CALL playTurn()
+    CALL showResults()
+
+PRIVATE FUNC createPlayers RECEIVES nothing DOES
+    REQUEST user to enter name for Player1
+    CREATE player1 by CALLING CreatePlayer(name1)
+    SET player1 to player1
+
+    REPEAT for player2
+
+PRIVATE FUNC playTurn RECEIVES nothing DOES
+    REPEAT 2 times:
+        (DO) WHILE:
+            get player's choice, a coordinate [i,j]
+            DO (assess player's choice by calling GameBoard.isBlank())
+        CALL GameBoard.placeMark(i,j)
+
+        // check for current game state
+        GameBoard.getGameState() to determine if there is a winner or tie or ongoing (these are defined by getGameState)
+        IF anything other than 'ongoing', break out of the loop (so the other 
+        player can't make a move), and CALL setResult 
+
+PRIVATE FUNC setResult RECEIVES result DOES
+    SET this.result to result
+
+PRIVATE FUNC showResults RECEIVES nothing DOES
+    LOG a message showing the outcome of the game, as indicated by result
+
+PUBLIC FUNC restartGame RECEIVES nothing DOES
+    CALL GameBoard.resetBoard()
+    SET player1 and player2 to null
+    CALL playGame()
+
+
+MODULE RETURNS {
+    the public stuff
+}
 */
