@@ -24,7 +24,14 @@ const gameBoard = (function () {
     let p1Mark;
     let p2Mark;
 
-    return {};
+    const isBlank = function (i, j) {
+        if (i < 0 || j < 0 || i > 2 || j > 2)
+            throw Error("Grid indices must be between 0 and 2, inclusive")
+        return grid[i][j] === null;
+    };
+
+
+    return {isBlank};
 })();
 
 /* ========================================================================== */
@@ -34,3 +41,8 @@ const gameBoard = (function () {
 function log(thing) {
     console.log(thing);
 }
+
+log(gameBoard.isBlank(0, 2));
+log(gameBoard.isBlank(3, 4));
+log(gameBoard.isBlank(3, 2));
+
