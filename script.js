@@ -1,5 +1,6 @@
 /* ========================================================================== */
 /* Factory functions & IIFE modules */
+/* Includes basic error checking which may/may not be necessary */
 /* ========================================================================== */
 
 const gameBoard = (function () {
@@ -58,12 +59,32 @@ const gameBoard = (function () {
 
     const resetBoard = function () {
         grid.forEach((row, i) => grid[i] = [null, null, null]);
-        numMarks = 0; // find out more about primitives and how they work with closures
+        numMarks = 0; 
     };
 
+    /**
+     * This function assumes at most 1 winner (that is: no winner or one of "x"
+     * or "o" is the winner)
+     * @returns "x" or "o" or null
+     */
+    const getGameWinner = function () {
+        const gridFlat = grid.flat();
+        
+        // Check the grid against the winning configurations until one is found 
+        // or all are exhausted with no winner found
+        for (config of winnerConfigs) {
+            for (mark of [MARK_X, MARK_O]) {
+                const isMarkWinner = gridFlat
+                    .map((val, i) => val === mark && config[i])
+                    .every((maskedVal, i) => maskedVal === config[i]);
+                if (isMarkWinner) return mark;
+            }
+        }
+        return null;
+    };
 
     return {
-        isBlank, placeMark, resetBoard,
+        isBlank, placeMark, resetBoard, 
         grid,  // for testing only
     };
 })();
