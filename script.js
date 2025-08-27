@@ -25,6 +25,12 @@ const gameBoard = (function () {
     let numMarks = 0;
     const MARK_X = "x";
     const MARK_O = "o";
+    const state = {
+        xWin: "xWin",
+        oWin: "oWin",
+        tie: "tie",
+        ongoing: "ongoing"
+    };
 
     /**
      * 
@@ -63,6 +69,25 @@ const gameBoard = (function () {
     }
 
     /**
+     * 
+     * @returns one of "xWin", "oWin", "tie", or "ongoing"
+     */
+    function getGameState() {
+        const winner = getGameWinner();
+        const isTie = winner === null && numMarks === 9;
+        
+        if (winner) {
+            return winner === MARK_X ? state.xWin : state.oWin;
+        }
+        else if (isTie) {
+            return state.tie;
+        }
+        else {
+            return state.ongoing;
+        }
+    }
+
+    /**
      * This function assumes at most 1 winner (that is: no winner or one of "x"
      * or "o" is the winner)
      * @returns "x" or "o" or null
@@ -84,7 +109,7 @@ const gameBoard = (function () {
     }
 
     return {
-        isBlank, placeMark, resetBoard, getGameWinner,
+        isBlank, placeMark, resetBoard, getGameState,
         grid,  // for testing only
     };
 })();
