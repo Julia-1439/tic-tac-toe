@@ -117,10 +117,29 @@ const gameBoard = (function () {
     }
 
     return {
-        isBlank, placeMark, resetBoard, getGameState,
-        grid,  // for testing only
+        isBlank, placeMark, resetBoard, getGameState
     };
 })();
+
+function createPlayer(name, mark) {
+    if (typeof name !== "string")
+        throw Error("Player name must be a string type");
+    // @TODO connect this to GameBoard perhaps. it can return a getter for valid
+    // marks
+    if (mark !== "x" && mark !== "o")
+        throw Error("Player mark must be either 'x' or 'o'");
+
+    function getName() {
+        return name;
+    }
+    function getMark() {
+        return mark;
+    }
+
+    return {
+        getName, getMark
+    };
+}
 
 /* ========================================================================== */
 /* TESTING */
