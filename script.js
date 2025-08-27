@@ -72,12 +72,7 @@ const gameBoard = (function () {
 /* TESTING */
 /* ========================================================================== */
 
-function log(thing) {
-    console.log(thing);
+function log(expression) {
+    console.log(expression);
 }
 
-gameBoard.placeMark(0,0,"x");
-gameBoard.placeMark(2,2,"o");
-
-log(gameBoard.isBlank(0,2));
-log(gameBoard.isBlank(2,2));
