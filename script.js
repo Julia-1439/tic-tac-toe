@@ -21,17 +21,36 @@ const gameBoard = (function () {
         [true , false, false, false, true , false, false, false, true ], 
         [false, false, true , false, true , false, true , false, false]
     ];
-    let p1Mark;
-    let p2Mark;
+    let numMarks = 0;
 
     const isBlank = function (i, j) {
         if (i < 0 || j < 0 || i > 2 || j > 2)
             throw Error("Grid indices must be between 0 and 2, inclusive")
+
         return grid[i][j] === null;
+    };
+    
+    const placeMark = function (i, j, mark) {
+        if (i < 0 || j < 0 || i > 2 || j > 2)
+            throw Error("Grid indices must be between 0 and 2, inclusive")
+        if (!isBlank(i, j)) {
+            throw Error(`Grid cell (${i}, ${j}) is not blank`);
+        }
+
+        grid[i][j] = mark;
+        numMarks++;
+    };
+
+    const resetBoard = function () {
+        grid.forEach((row, i) => grid[i] = [null, null, null]);
+        numMarks = 0; // find out more about primitives and how they work with closures
     };
 
 
-    return {isBlank};
+    return {
+        isBlank, placeMark, resetBoard,
+        grid,  // for testing only
+    };
 })();
 
 /* ========================================================================== */
@@ -42,7 +61,8 @@ function log(thing) {
     console.log(thing);
 }
 
-log(gameBoard.isBlank(0, 2));
-log(gameBoard.isBlank(3, 4));
-log(gameBoard.isBlank(3, 2));
+gameBoard.placeMark(0,0,"x");
+gameBoard.placeMark(2,2,"o");
 
+log(gameBoard.isBlank(0,2));
+log(gameBoard.isBlank(2,2));
