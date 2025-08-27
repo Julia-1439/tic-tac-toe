@@ -32,12 +32,12 @@ const gameBoard = (function () {
      * @param {Number} j 
      * @returns Boolean
      */
-    const isBlank = function (i, j) {
+    function isBlank(i, j) {
         if (i < 0 || j < 0 || i > 2 || j > 2)
             throw Error("Grid indices must be between 0 and 2, inclusive");
 
         return grid[i][j] === null;
-    };
+    }
     
     /**
      * 
@@ -45,7 +45,7 @@ const gameBoard = (function () {
      * @param {Number} j 
      * @param {String} mark 
      */
-    const placeMark = function (i, j, mark) {
+    function placeMark(i, j, mark) {
         if (i < 0 || j < 0 || i > 2 || j > 2)
             throw Error("Grid indices must be between 0 and 2, inclusive");
         if (mark !== MARK_X && mark !== MARK_O) 
@@ -55,19 +55,19 @@ const gameBoard = (function () {
 
         grid[i][j] = mark;
         numMarks++;
-    };
+    }
 
-    const resetBoard = function () {
+    function resetBoard() {
         grid.forEach((row, i) => grid[i] = [null, null, null]);
         numMarks = 0; 
-    };
+    }
 
     /**
      * This function assumes at most 1 winner (that is: no winner or one of "x"
      * or "o" is the winner)
      * @returns "x" or "o" or null
      */
-    const getGameWinner = function () {
+    function getGameWinner() {
         const gridFlat = grid.flat();
         
         // Check the grid against the winning configurations until one is found 
@@ -81,10 +81,10 @@ const gameBoard = (function () {
             }
         }
         return null;
-    };
+    }
 
     return {
-        isBlank, placeMark, resetBoard, 
+        isBlank, placeMark, resetBoard, getGameWinner,
         grid,  // for testing only
     };
 })();
