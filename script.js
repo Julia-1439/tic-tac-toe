@@ -3,6 +3,14 @@
 /* Includes basic error checking which may/may not be necessary */
 /* ========================================================================== */
 
+/**
+ * This module is to be controlled by a game controller that will supply 
+ * correct inputs in a valid order as defined by the rules of tic-tac-toe.
+ * 
+ * This module's functions offer minimal error checking: checking if arguments
+ * are valid at face-value but not whether they are part of a valid game of 
+ * tic-tac-toe. 
+ */
 const gameBoard = (function () {
     const grid = [
         [null, null, null],
