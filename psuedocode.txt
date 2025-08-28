@@ -75,61 +75,78 @@ PUBLIC FUNC getMarker () {
 }
 // no setters since don't want these properties to be modified
 
+// ? just an idea
+PUBLIC FUNC requestMark(i, j) {
+
+}
+
 RETURN {
     the public stuff
 }
 */
 
+
 /*
-GameFlow IIFE module:
+GameControl IIFE module:
 CAPTION: Logic responsible for allowing players to make a choice, calling GameBoard's methods. 
 will print to console in the console version of the game. 
 MODULE RECEIVES nothing (no dependencies)
 
-PRIVATE let playerTurn GETS null;
 PRIVATE let player1;
 PRIVATE let player2;
-PRIVATE let result = null; // one of null, 'x', 'o', or 'tie' (as enumerated by GameBoard.getGameState)
 
-// activated by a 'Start Game' button
-PUBLIC FUNC playGame RECEIVES nothing DOES 
-    CALL createPlayers()
-    WHILE !result:
-        CALL playTurn()
-    CALL showResults()
+// holds null, 1, or 2. null acts as a proxy for a game not being in session
+PRIVATE let playerTurn = null; 
 
-PRIVATE FUNC createPlayers RECEIVES nothing DOES
-    REQUEST user to enter name for Player1
-    CREATE player1 by CALLING CreatePlayer(name1)
-    SET player1 to player1
+PRIVATE FUNC isGameOngoing ACCEPTS nothing
+    RETURNS whether playerTurn IS NOT null
 
-    REPEAT for player2
+// called when pressing the [Start Game] button
+PUBLIC FUNC createPlayers ACCEPTS name1, name2 RETURNS nothing
+    CHECK if game is ongoing by CALLING isGameOnGoing
+        THROW error if so
+    CHECK if player1 or player2 are already defined
+        THROW error if so
 
-PRIVATE FUNC playTurn RECEIVES nothing DOES
-    REPEAT 2 times:
-        (DO) WHILE:
-            get player's choice, a coordinate [i,j]
-            DO (assess player's choice by calling GameBoard.isBlank())
-        CALL GameBoard.placeMark(i,j)
+    SET player1 & player2 BY CALLING createPlayer factory function
 
-        // check for current game state
-        GameBoard.getGameState() to determine if there is a winner or tie or ongoing (these are defined by getGameState)
-        IF anything other than 'ongoing', break out of the loop (so the other 
-        player can't make a move), and CALL setResult 
+// called to start a new game once players are created (click [Begin!] on player creation screen)
+PUBLIC FUNC playGame ACCEPTS nothing RETURNS nothing
+    CHECK if players are created: if player1 or player2 are undefined
+        THROW error if so
+    CHECK if game IS ongoing by CALLING isGameOnGoing
+        THROW error if so
+    
+    RESET the gameBoard by CALLING gameBoard.resetBoard
+    SET playerTurn TO 1
 
-PRIVATE FUNC setResult RECEIVES result DOES
-    SET this.result to result
+PUBLIC FUNC playTurn ACCEPTS coordinates i,j RETURNS the marker placed or error if unable to
+    CHECK if game IS NOT ongoing by CALLING isGameOnGoing
+        THROW error if so
+    check if coordinate is valid: in range? does it collide? (use Gameboard.isBlank(i,j))
+        THROW error
 
-PRIVATE FUNC showResults RECEIVES nothing DOES
-    LOG a message showing the outcome of the game, as indicated by result
+    // place mark
+    SET mark to x or o depending on playerTurn
+    CALL Gameboard.placeMark(i,j,mark)
 
-PUBLIC FUNC restartGame RECEIVES nothing DOES
-    CALL GameBoard.resetBoard()
-    SET player1 and player2 to null
-    CALL playGame()
+    // Check the gamestate and handle a conclusion if applicable
+    CALL Gameboard.getGamestate()
+    IF 'ongoing',
+        SET playerTurn to either 1 or 2 (toggle)
+    ELSE (game has concluded),         
+        CALL showConclusion PASSING IN the conclusion
+        CALL concludeGame
 
+PRIVATE FUNC showConclusion ACCEPTS one of 'xWin', 'oWin', 'tie' (as defined by Gameboard) RETURNS nothing
+    IF not a valid conclusion:
+        THROW error
 
-MODULE RETURNS {
-    the public stuff
-}
+    LOG a message displaying the conclusion
+
+PRIVATE FUNC concludeGame ACCEPTS nothing RETURNS nothing
+    SET playerTurn TO null // disables playTurn from being called until playGame is called again
+    (does not reset the player)
+    (does not reset the grid)
+
 */
