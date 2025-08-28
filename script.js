@@ -133,6 +133,7 @@ const gameBoard = (function () {
 
 function createPlayer(name, mark) {
     const validMarks = gameBoard.getValidMarks();
+    let score = 0;
 
     if (typeof name !== "string")
         throw Error("Player name must be a string type");
@@ -145,9 +146,15 @@ function createPlayer(name, mark) {
     function getMark() {
         return mark;
     }
+    function incrementScore() {
+        score++;
+    }
+    function getScore() {
+        return score;
+    }
 
     return {
-        getName, getMark
+        getName, getMark, incrementScore, getScore
     };
 }
 
@@ -220,31 +227,43 @@ const gameControl = (function () {
                 toggleTurn();
                 break;
             case boardStates.xWin:
+                // @TODO refactor assuming X is always first
                 console.log(`X has won the game!`);
-                concludeGame();
+                player1.incrementScore();
+                endGame();
                 break;
             case boardStates.oWin:
                 console.log(`O has won the game!`);
-                concludeGame();
+                player2.incrementScore();
+                endGame();
                 break;
             case boardStates.tie:
                 console.log(`The game is a tie!`);
-                concludeGame();
+                endGame();
                 break;
         }
     }
 
-    function concludeGame() {
+    function endGame() {
         turn = null;
     }
 
+    function getPlayerScores() {
+        return {
+            p1Score: player1.getScore(),
+            p2Score: player2.getScore()
+        }
+    }
+
     return {
-        createPlayers, playGame, playTurn
+        createPlayers, playGame, playTurn, getPlayerScores
     };
     
 })();
 
+const gameDisplay = (function () {
 
+})();
 
 /* ========================================================================== */
 /* TESTING */
