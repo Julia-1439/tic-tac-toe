@@ -173,6 +173,8 @@ const gameControl = (function () {
 
     /**
      * Error handling on the arguments are done by the createPlayer factory func
+     * @TODO per specs: add a display element that shows the results upon game end. 
+     * I imagine this means keeping score. so might want to have a score variable here
      * @param {String} name1 
      * @param {String} name2 
      */
