@@ -33,12 +33,19 @@ const gameBoard = (function () {
     let numMarks = 0;
     const MARK_X = "x";
     const MARK_O = "o";
-    const state = {
+    const states = {
         xWin: "xWin",
         oWin: "oWin",
         tie: "tie",
         ongoing: "ongoing"
     };
+
+    function getValidMarks() {
+        return [MARK_X, MARK_O];
+    }
+    function getGameStates() {
+        return states;
+    }
 
     /**
      * 
@@ -84,18 +91,18 @@ const gameBoard = (function () {
      * 
      * @returns one of "xWin", "oWin", "tie", or "ongoing"
      */
-    function getGameState() {
-        const winner = getGameWinner();
-        const isTie = winner === null && numMarks === 9;
+    function computeState() {
+        const winningMark = computeWinningMark();
+        const isTie = winningMark === null && numMarks === 9;
         
-        if (winner) {
-            return winner === MARK_X ? state.xWin : state.oWin;
+        if (winningMark) {
+            return winningMark === MARK_X ? states.xWin : states.oWin;
         }
         else if (isTie) {
-            return state.tie;
+            return states.tie;
         }
         else {
-            return state.ongoing;
+            return states.ongoing;
         }
     }
 
@@ -104,7 +111,7 @@ const gameBoard = (function () {
      * or "o" is the winner)
      * @returns "x" or "o" or null
      */
-    function getGameWinner() {
+    function computeWinningMark() {
         const gridFlat = grid.flat();
         
         // Check the grid against the winning configurations until one is found 
@@ -121,17 +128,18 @@ const gameBoard = (function () {
     }
 
     return {
-        isBlank, placeMark, resetBoard, getGameState
+        placeMark, resetBoard, computeState,
+        getGameStates, getValidMarks
     };
 })();
 
 function createPlayer(name, mark) {
+    const validMarks = gameBoard.getValidMarks();
+
     if (typeof name !== "string")
         throw Error("Player name must be a string type");
-    // @TODO connect this to GameBoard perhaps. it can return a getter for valid
-    // marks
-    if (mark !== "x" && mark !== "o")
-        throw Error("Player mark must be either 'x' or 'o'");
+    if (!validMarks.includes(mark))
+        throw Error(`Player mark must be one of ${validMarks}`);
 
     function getName() {
         return name;
