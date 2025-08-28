@@ -131,20 +131,14 @@ const gameBoard = (function () {
     };
 })();
 
-function createPlayer(name, mark) {
-    const validMarks = gameBoard.getValidMarks();
-    let score = 0;
-
+function createPlayer(name) {
     if (typeof name !== "string")
         throw Error("Player name must be a string type");
-    if (!validMarks.includes(mark))
-        throw Error(`Player mark must be one of ${validMarks}`);
 
+    let score = 0;
+    
     function getName() {
         return name;
-    }
-    function getMark() {
-        return mark;
     }
     function incrementScore() {
         score++;
@@ -154,7 +148,7 @@ function createPlayer(name, mark) {
     }
 
     return {
-        getName, getMark, incrementScore, getScore
+        getName, incrementScore, getScore
     };
 }
 
@@ -193,8 +187,8 @@ const gameControl = (function () {
         if (hasGameBegun()) 
             throw Error("A game is already in progress");
 
-        player1 = createPlayer(name1, MARK_X);
-        player2 = createPlayer(name2, MARK_O);
+        player1 = createPlayer(name1);
+        player2 = createPlayer(name2);
     }
 
     function playGame() {
@@ -217,8 +211,7 @@ const gameControl = (function () {
         if (!hasGameBegun())
             throw Error("A game has not started yet");
         
-        const markToPlace = 
-            (turn === 1) ? player1.getMark() : player2.getMark();
+        const markToPlace = (turn === 1) ? MARK_X : MARK_O;
         gameBoard.placeMark(i, j, markToPlace);
         
         const gameState = gameBoard.computeState();
@@ -227,13 +220,12 @@ const gameControl = (function () {
                 toggleTurn();
                 break;
             case boardStates.xWin:
-                // @TODO refactor assuming X is always first
-                console.log(`X has won the game!`);
+                console.log(`${MARK_X} has won the game!`);
                 player1.incrementScore();
                 endGame();
                 break;
             case boardStates.oWin:
-                console.log(`O has won the game!`);
+                console.log(`${MARK_O} has won the game!`);
                 player2.incrementScore();
                 endGame();
                 break;
