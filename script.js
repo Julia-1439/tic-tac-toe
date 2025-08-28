@@ -129,7 +129,8 @@ const gameBoard = (function () {
 
     return {
         placeMark, resetBoard, computeState,
-        getGameStates, getValidMarks
+        getGameStates, getValidMarks,
+        grid // only public in testing
     };
 })();
 
@@ -152,6 +153,73 @@ function createPlayer(name, mark) {
         getName, getMark
     };
 }
+
+const gameControl = (function () {
+    let player1;
+    let player2;
+    let turn = null;
+    const [MARK_X, MARK_O] = gameBoard.getValidMarks();
+    const boardStates = gameBoard.getGameStates();
+
+    function hasGameBegun() {
+        return turn !== null;
+    }
+
+    function toggleTurn() {
+        if (!hasGameBegun()) 
+            throw Error("A game has not started yet");
+
+        turn = (turn === 1) ? 2 : 1;
+    }
+
+    // @TODO replacing hard-coded values for the markers
+    function createPlayers(name1, name2) {
+        if (player1 !== undefined && player2 !== undefined)
+            throw Error("The players are already created");
+        if (hasGameBegun()) 
+            throw Error("A game is already in progress");
+
+        player1 = createPlayer(name1, MARK_X);
+        player2 = createPlayer(name2, MARK_O);
+    }
+
+    function playGame() {
+        if (player1 === undefined || player2 === undefined)
+            throw Error("Players must be created first");
+        if (hasGameBegun())
+            throw Error("A game is already in progress");
+
+        turn = 1;
+    }
+
+    /**
+     * Error handling for the indices is done by the gameBoard module,
+     * including collision checking
+     * @param {Number} i 
+     * @param {Number} j 
+     */
+    function playTurn(i, j) {
+        if (!hasGameBegun())
+            throw Error("A game has not started yet");
+        
+        const markToPlace = 
+            (turn === 1) ? player1.getMark() : player2.getMark();
+        gameBoard.placeMark(i, j, markToPlace);
+        
+        // Tested! we can place marks. 
+        const gameState = gameBoard.computeState();
+
+        // @TODO
+
+        toggleTurn(); // temporary for testing
+    }
+    
+
+    return {
+        createPlayers, playGame, playTurn
+    };
+    
+})();
 
 /* ========================================================================== */
 /* TESTING */
