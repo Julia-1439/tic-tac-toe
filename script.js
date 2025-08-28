@@ -9,7 +9,7 @@
  * 
  * This module's functions offer minimal error checking: checking if arguments
  * are valid at face-value but not whether they are part of a valid game of 
- * tic-tac-toe. 
+ * tic-tac-toe. The game flow is instead dicated by the game controller module.
  */
 const gameBoard = (function () {
     const grid = [
@@ -43,7 +43,7 @@ const gameBoard = (function () {
     function getValidMarks() {
         return [MARK_X, MARK_O];
     }
-    function getGameStates() {
+    function getPossibleStates() {
         return states;
     }
 
@@ -88,7 +88,7 @@ const gameBoard = (function () {
     }
 
     /**
-     * 
+     * @NOTE room for optimization: moving ongoing case upward
      * @returns one of "xWin", "oWin", "tie", or "ongoing"
      */
     function computeState() {
@@ -107,8 +107,8 @@ const gameBoard = (function () {
     }
 
     /**
-     * This function assumes at most 1 winner (that is: no winner or one of "x"
-     * or "o" is the winner)
+     * This function returns at most 1 winner (that is: no winner or one of "x"
+     * or "o" is the winner, but no two winners)
      * @returns "x" or "o" or null
      */
     function computeWinningMark() {
@@ -128,9 +128,8 @@ const gameBoard = (function () {
     }
 
     return {
-        placeMark, resetBoard, computeState,
-        getGameStates, getValidMarks,
-        grid // only public in testing
+        placeMark, computeState, resetBoard, 
+        getPossibleStates, getValidMarks
     };
 })();
 
@@ -157,9 +156,9 @@ function createPlayer(name, mark) {
 const gameControl = (function () {
     let player1;
     let player2;
-    let turn = null;
+    let turn = null; // used as a proxy for whether a game has started
     const [MARK_X, MARK_O] = gameBoard.getValidMarks();
-    const boardStates = gameBoard.getGameStates();
+    const boardStates = gameBoard.getPossibleStates();
 
     function hasGameBegun() {
         return turn !== null;
@@ -172,7 +171,11 @@ const gameControl = (function () {
         turn = (turn === 1) ? 2 : 1;
     }
 
-    // @TODO replacing hard-coded values for the markers
+    /**
+     * Error handling on the arguments are done by the createPlayer factory func
+     * @param {String} name1 
+     * @param {String} name2 
+     */
     function createPlayers(name1, name2) {
         if (player1 !== undefined && player2 !== undefined)
             throw Error("The players are already created");
@@ -189,6 +192,7 @@ const gameControl = (function () {
         if (hasGameBegun())
             throw Error("A game is already in progress");
 
+        gameBoard.resetBoard();
         turn = 1;
     }
 
@@ -206,14 +210,29 @@ const gameControl = (function () {
             (turn === 1) ? player1.getMark() : player2.getMark();
         gameBoard.placeMark(i, j, markToPlace);
         
-        // Tested! we can place marks. 
         const gameState = gameBoard.computeState();
-
-        // @TODO
-
-        toggleTurn(); // temporary for testing
+        switch (gameState) {
+            case boardStates.ongoing: 
+                toggleTurn();
+                break;
+            case boardStates.xWin:
+                console.log(`X has won the game!`);
+                concludeGame();
+                break;
+            case boardStates.oWin:
+                console.log(`O has won the game!`);
+                concludeGame();
+                break;
+            case boardStates.tie:
+                console.log(`The game is a tie!`);
+                concludeGame();
+                break;
+        }
     }
-    
+
+    function concludeGame() {
+        turn = null;
+    }
 
     return {
         createPlayers, playGame, playTurn
