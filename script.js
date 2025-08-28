@@ -5,11 +5,9 @@
 
 /**
  * This module is to be controlled by a game controller that will supply 
- * correct inputs in a valid order as defined by the rules of tic-tac-toe.
- * 
- * This module's functions offer minimal error checking: checking if arguments
- * are valid at face-value but not whether they are part of a valid game of 
- * tic-tac-toe. The game flow is instead dicated by the game controller module.
+ * correct inputs in a valid order as defined by the rules of tic-tac-toe. 
+ * @TODO might implement the isBlank check in the game controller. might want
+ * them to have the greatest "control". will depend on how displayControl works
  */
 const gameBoard = (function () {
     const grid = [
@@ -153,6 +151,10 @@ function createPlayer(name, mark) {
     };
 }
 
+/**
+ * This module provides functions to create players, start/restart a game,
+ * and dictate player turn. 
+ */
 const gameControl = (function () {
     let player1;
     let player2;
@@ -241,6 +243,8 @@ const gameControl = (function () {
     };
     
 })();
+
+
 
 /* ========================================================================== */
 /* TESTING */
