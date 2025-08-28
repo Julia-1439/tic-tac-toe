@@ -150,3 +150,73 @@ PRIVATE FUNC concludeGame ACCEPTS nothing RETURNS nothing
     (does not reset the grid)
 
 */
+
+/*
+GameDisplay IIFE module:
+CAPTION: Provides means for user to interact with the game. Makes calls to 
+GameControl based on user input.  
+MODULE RECEIVES nothing (no dependencies)
+
+per specs:
+Write a function that will render the contents of the gameboard array to the 
+webpage (for now, you can always just fill the gameboard array with "X"s and 
+"O"s just to see what’s going on).
+
+// lets do this first so i can see the game that's going on when i play in console
+FUNC displayGrid ACCEPTS nothing DOES:
+    GET a copy of the grid from gameBoard (should be a copy)
+    FOR i,j in the grid:
+        SELECT the grid cell with matching data-i and data-j
+        SET its text content to x, o, or ""
+
+ADD EVT LISTENER to ['Start game'] CALL showModal() on dialog #create-players-dialog
+ADD EVT LISTENER to ['Begin!] CALL:
+    gameControl.createPlayers(the names)
+    REMOVE ['Start game'] from the DOM
+    ADD ['Restart game'] in place of ['Start game']
+    ADD EVT LISTENER to ['Restart game'] CALL gameControl.end() and gameControl.playGame()
+    ADD "turn" display to the top left populated with p1name and symbol
+
+ADD EVT LISTENER to the grid listening for which cell is selected using the data-* attributes:
+    if requests a blank space:
+        ADD a symbol in that space (might need to have access to gameControl's turn variable)
+        CALL gameControl.playTurn(i,j)
+        if gameState is ongoing:
+            TOGGLE the turn display
+        else:
+            activate ending modal by calling .showModal()
+    else (requests an occupied space):
+        DISPLAY a transient message notifying that space is occupied 
+
+ADD EVT LISTENER to the ending modal's ['Play-again'] button:
+    CALL gameControl.playGame()
+    close modal
+
+*/
+
+/*
+HTML
+
+button ['Start game'] with id=open-player-creation
+dialog with id=create-players-dialog CONTAINS:
+    inputs for the player names
+    button ['Begin!'] with id=create-players
+    button ['Cancel'] to close the modal
+
+// tictactoe grid
+div with grid layout 3x3 containing cells:
+    each with attributes "data-i" and "data-j" 
+    and some pixel gap between them
+
+top left: div with a 'turn' indicator and player name & marker
+
+below grid: a hidden div that displays if a space is occupied.
+
+dialog with id=end-screen-dialog CONTAINS
+    result message
+    player scores
+    button ['Play again?'] with id=play-again
+    button ['Close'] to close the modal
+
+
+*/
