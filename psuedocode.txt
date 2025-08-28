@@ -98,12 +98,12 @@ PRIVATE let player2;
 // holds null, 1, or 2. null acts as a proxy for a game not being in session
 PRIVATE let playerTurn = null; 
 
-PRIVATE FUNC isGameOngoing ACCEPTS nothing
+PRIVATE FUNC hasGameBegun ACCEPTS nothing
     RETURNS whether playerTurn IS NOT null
 
 // called when pressing the [Start Game] button
 PUBLIC FUNC createPlayers ACCEPTS name1, name2 RETURNS nothing
-    CHECK if game is ongoing by CALLING isGameOnGoing
+    CHECK if game is ongoing by CALLING hasGameBegun
         THROW error if so
     CHECK if player1 or player2 are already defined
         THROW error if so
@@ -114,14 +114,14 @@ PUBLIC FUNC createPlayers ACCEPTS name1, name2 RETURNS nothing
 PUBLIC FUNC playGame ACCEPTS nothing RETURNS nothing
     CHECK if players are created: if player1 or player2 are undefined
         THROW error if so
-    CHECK if game IS ongoing by CALLING isGameOnGoing
+    CHECK if game IS ongoing by CALLING hasGameBegun
         THROW error if so
     
     RESET the gameBoard by CALLING gameBoard.resetBoard
     SET playerTurn TO 1
 
 PUBLIC FUNC playTurn ACCEPTS coordinates i,j RETURNS the marker placed or error if unable to
-    CHECK if game IS NOT ongoing by CALLING isGameOnGoing
+    CHECK if game IS NOT ongoing by CALLING hasGameBegun
         THROW error if so
     check if coordinate is valid: in range? does it collide? (use Gameboard.isBlank(i,j))
         THROW error
