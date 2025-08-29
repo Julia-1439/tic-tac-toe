@@ -179,8 +179,6 @@ const gameControl = (function () {
 
     /**
      * Error handling on the arguments are done by the createPlayer factory func
-     * @TODO per specs: add a display element that shows the results upon game end. 
-     * I imagine this means keeping score. so might want to have a score variable here
      * @param {String} name1 
      * @param {String} name2 
      */
@@ -218,26 +216,30 @@ const gameControl = (function () {
         gameBoard.placeMark(i, j, markToPlace);
         
         const gameState = gameBoard.computeState();
+        let statusMsg = "";
         switch (gameState) {
             case boardStates.ongoing: 
                 toggleTurn();
-                break;
+                return statusMsg;
+
             case boardStates.xWin:
-                // @TODO: put in the player names here
-                console.log(`${MARK_X} has won the game!`);
                 player1.incrementScore();
-                endGame();
+                statusMsg = 
+                    `"${player1.getName()}" (${MARK_X}) has won the game!`;
                 break;
             case boardStates.oWin:
-                console.log(`${MARK_O} has won the game!`);
                 player2.incrementScore();
-                endGame();
+                statusMsg = 
+                    `"${player2.getName()}" (${MARK_O}) has won the game!`;
                 break;
             case boardStates.tie:
-                console.log(`The game is a tie!`);
-                endGame();
+                statusMsg = "The game is a tie!";
                 break;
         }
+
+        endGame();
+        statusMsg += `<br>The score is: "${player1.getName()}" ${player1.getScore()} | ${player2.getScore()} "${player2.getName()}"`;
+        return statusMsg;
     }
 
     function endGame() {
@@ -252,8 +254,8 @@ const gameControl = (function () {
     }
 
     return {
-        createPlayers, playGame, endGame, playTurn, getPlayerScores,
-        hasGameBegun
+        createPlayers, playGame, endGame, playTurn, 
+        getPlayerScores, hasGameBegun,
     };
     
 })();
@@ -328,11 +330,12 @@ const gameDisplay = (function () {
             cellElement.getAttribute("data-j")].map(Number);
         
         try {
-            gameControl.playTurn(i, j);
+            const statusMsg = gameControl.playTurn(i, j);
+            alert.innerHTML = statusMsg; // no JS injection I think; no user input!
             update();
         }
         catch (err) {
-            alert.textContent = "Error";
+            alert.textContent = "That spot is already filled";
         }
     }
 
