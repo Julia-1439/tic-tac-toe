@@ -252,7 +252,8 @@ const gameControl = (function () {
     }
 
     return {
-        createPlayers, playGame, playTurn, getPlayerScores
+        createPlayers, playGame, playTurn, getPlayerScores,
+        hasGameBegun
     };
     
 })();
@@ -260,6 +261,18 @@ const gameControl = (function () {
 const gameDisplay = (function () {
 
     const grid = document.querySelector("#ttt-grid");
+    const alert = document.querySelector("#alert-box > p");
+
+    grid.addEventListener("click", (evt) => {
+        const target = evt.target;
+        if (!target.classList.contains("ttt-cell")) {
+            return;
+        }
+
+        const cell = target;
+        handleCellClick(cell);
+    });
+
     // @NOTE: each function here will probably be an event listener
     function update() {
         const gameArray = gameBoard.getGridCopy();
@@ -271,8 +284,26 @@ const gameDisplay = (function () {
         }  
     }
 
-    function handleCellClick(evt) {
 
+    // @NOTE: might have to do better error handling, perhaps through some error 
+    // messages that gameControl can return for the display to print.
+    function handleCellClick(cellElement) {
+        if (!gameControl.hasGameBegun()) {
+            alert.textContent = "A game has not begun yet!";
+            return;
+        }
+
+        alert.textContent = ""; // Clear any prior alert message
+        const [i, j] = [cellElement.getAttribute("data-i"), 
+            cellElement.getAttribute("data-j")].map(strIdx => +strIdx);
+        
+        try {
+            gameControl.playTurn(i, j);
+            update();
+        }
+        catch (err) {
+            alert.textContent = "Error";
+        }
     }
 
 
