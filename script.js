@@ -316,7 +316,7 @@ const gameDisplay = (function () {
 
         alert.textContent = ""; // Clear any prior alert message
         const [i, j] = [cellElement.getAttribute("data-i"), 
-            cellElement.getAttribute("data-j")].map(strIdx => +strIdx);
+            cellElement.getAttribute("data-j")].map(Number);
         
         try {
             gameControl.playTurn(i, j);
