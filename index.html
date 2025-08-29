@@ -8,6 +8,21 @@
   <script src="script.js" defer></script>
 </head>
 <body>
+  <button type="button" id="open-create-players">
+    Start Game
+  </button>
+  <dialog id="create-players-dialog">
+    <form method="dialog">
+      <label for="p1name">
+        <input required type="text" name="p1name" id="p1name">
+      </label>
+      <label for="p2name">
+        <input required type="text" name="p2name" id="p2name">
+      </label>
+      <button id="create-players-btn" type="submit">Begin!</button>
+      <button formnovalidate type="submit">Cancel</button>
+    </form>
+  </dialog>
   <div id="ttt-grid">
     <div class="ttt-cell" data-i="0" data-j="0"></div>
     <div class="ttt-cell" data-i="0" data-j="1"></div>

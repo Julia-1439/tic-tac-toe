@@ -262,7 +262,6 @@ const gameDisplay = (function () {
 
     const grid = document.querySelector("#ttt-grid");
     const alert = document.querySelector("#alert-box > p");
-
     grid.addEventListener("click", (evt) => {
         const target = evt.target;
         if (!target.classList.contains("ttt-cell")) {
@@ -271,6 +270,28 @@ const gameDisplay = (function () {
 
         const cell = target;
         handleCellClick(cell);
+    });
+
+    const playersButton = document.querySelector("#open-create-players");
+    const playersDialog = document.querySelector("#create-players-dialog");
+    playersButton.addEventListener("click", (evt) => {
+        playersDialog.showModal();
+    });
+
+    const playersForm = playersDialog.querySelector("form");
+    playersForm.addEventListener("submit", (evt) => {
+        if (evt.submitter.id === "create-players-btn") {
+            // Use the FormData constructor since the form method ("dialog") 
+            // does not transmit the data via a formdata event
+            const formData = new FormData(playersForm);
+            const [p1name, p2name] = [formData.get("p1name"), formData.get("p2name")];
+            gameControl.createPlayers(p1name, p2name); 
+            gameControl.playGame();
+
+            playersButton.parentElement.removeChild(playersButton);
+        }
+
+        playersForm.reset(); 
     });
 
     // @NOTE: each function here will probably be an event listener
