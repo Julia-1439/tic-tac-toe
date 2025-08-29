@@ -4,6 +4,10 @@ html {
   --grid-gap-size: 15px;
 }
 
+#restart-game {
+  visibility: hidden;
+}
+
 #ttt-grid {
   width: min-content;
   padding: var(--grid-gap-size);

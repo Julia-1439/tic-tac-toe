@@ -252,7 +252,7 @@ const gameControl = (function () {
     }
 
     return {
-        createPlayers, playGame, playTurn, getPlayerScores,
+        createPlayers, playGame, endGame, playTurn, getPlayerScores,
         hasGameBegun
     };
     
@@ -279,6 +279,7 @@ const gameDisplay = (function () {
     });
 
     const playersForm = playersDialog.querySelector("form");
+    const restartButton = document.querySelector("#restart-game");
     playersForm.addEventListener("submit", (evt) => {
         if (evt.submitter.id === "create-players-btn") {
             // Use the FormData constructor since the form method ("dialog") 
@@ -289,9 +290,17 @@ const gameDisplay = (function () {
             gameControl.playGame();
 
             playersButton.parentElement.removeChild(playersButton);
+            restartButton.style["visibility"] = "visible";
         }
 
         playersForm.reset(); 
+    });
+
+    restartButton.addEventListener("click", (evt) => {
+        gameControl.endGame();
+        gameControl.playGame();
+        update();
+        alert.textContent = "Game has restarted!";
     });
 
     // @NOTE: each function here will probably be an event listener
@@ -329,7 +338,7 @@ const gameDisplay = (function () {
 
 
     return {
-        update
+        update //@TODO might remove
     };
 })();
 
