@@ -169,6 +169,8 @@ FUNC displayGrid ACCEPTS nothing DOES:
         SELECT the grid cell with matching data-i and data-j
         SET its text content to x, o, or ""
 
+FUNC handleCellClick ACCEPTS click event RETURNS 
+
 ADD EVT LISTENER to ['Start game'] CALL showModal() on dialog #create-players-dialog
 ADD EVT LISTENER to ['Begin!] CALL:
     gameControl.createPlayers(the names)

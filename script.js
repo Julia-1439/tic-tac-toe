@@ -260,7 +260,7 @@ const gameControl = (function () {
 const gameDisplay = (function () {
 
     const grid = document.querySelector("#ttt-grid");
-    
+    // @NOTE: each function here will probably be an event listener
     function update() {
         const gameArray = gameBoard.getGridCopy();
         for (let i = 0; i < 3; i++) {
@@ -269,6 +269,10 @@ const gameDisplay = (function () {
                 cell.textContent = gameArray[i][j];
             }
         }  
+    }
+
+    function handleCellClick(evt) {
+
     }
 
 
