@@ -170,6 +170,13 @@ FUNC displayGrid ACCEPTS nothing DOES:
         SET its text content to x, o, or ""
 
 FUNC handleCellClick ACCEPTS click event RETURNS 
+    TRY
+        CALL gameControl.playTurn(i,j)
+        CALL displayGrid to update the display
+    CATCH  
+        DISPLAY a message in #alert-box saying it's occupied and to try again
+    
+    
 
 ADD EVT LISTENER to ['Start game'] CALL showModal() on dialog #create-players-dialog
 ADD EVT LISTENER to ['Begin!] CALL:
