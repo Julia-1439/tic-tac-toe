@@ -44,6 +44,9 @@ const gameBoard = (function () {
     function getPossibleStates() {
         return states;
     }
+    function getGridCopy() {
+        return [...grid];
+    }
 
     /**
      * 
@@ -126,7 +129,7 @@ const gameBoard = (function () {
     }
 
     return {
-        placeMark, computeState, resetBoard, 
+        placeMark, computeState, resetBoard, getGridCopy,
         getPossibleStates, getValidMarks
     };
 })();
@@ -220,6 +223,7 @@ const gameControl = (function () {
                 toggleTurn();
                 break;
             case boardStates.xWin:
+                // @TODO: put in the player names here
                 console.log(`${MARK_X} has won the game!`);
                 player1.incrementScore();
                 endGame();
@@ -255,6 +259,22 @@ const gameControl = (function () {
 
 const gameDisplay = (function () {
 
+    const grid = document.querySelector("#ttt-grid");
+    
+    function update() {
+        const gameArray = gameBoard.getGridCopy();
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                const cell = grid.querySelector(`[data-i="${i}"][data-j="${j}"]`);
+                cell.textContent = gameArray[i][j];
+            }
+        }  
+    }
+
+
+    return {
+        update
+    };
 })();
 
 /* ========================================================================== */

@@ -1,0 +1,20 @@
+
+html {
+  --cell-size: 100px;
+  --grid-gap-size: 15px;
+}
+
+#ttt-grid {
+  width: min-content;
+  padding: var(--grid-gap-size);
+
+  display: grid;
+  grid-template: repeat(3, var(--cell-size)) / repeat(3, var(--cell-size));
+  gap: var(--grid-gap-size);
+
+  background-color: blue;
+}
+
+.ttt-cell {
+  background-color: white;
+}
