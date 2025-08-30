@@ -166,8 +166,11 @@ const gameControl = (function () {
         turn = (turn === 1) ? 2 : 1;
     }
 
-    function getTurn() {
-        return turn;
+    function getNextMark() {
+        if (!hasGameBegun()) 
+            return "";
+
+        return (turn === 1) ? MARK_X : MARK_O;
     }
 
     /**
@@ -248,7 +251,7 @@ const gameControl = (function () {
     }
 
     return {
-        createPlayers, hasGameBegun, playGame, playTurn, getTurn, 
+        createPlayers, hasGameBegun, playGame, playTurn, getNextMark, 
         endGame, getPlayerData
     };
 })();
@@ -312,8 +315,7 @@ const gameDisplay = (function () {
                 cell.textContent = gameArray[i][j];
             }
         }  
-        turnIndicator.textContent = 
-            (gameControl.getTurn() === 1) ? MARK_X : MARK_O;
+        turnIndicator.textContent = gameControl.getNextMark();
     }
 
 
