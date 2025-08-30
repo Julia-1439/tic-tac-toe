@@ -4,10 +4,10 @@
 /* ========================================================================== */
 
 /**
- * This module is to be controlled by a game controller that will supply 
+ * This module is to be controlled by a game controller that should supply 
  * correct inputs in a valid order as defined by the rules of tic-tac-toe. 
- * @TODO might implement the isBlank check in the game controller. might want
- * them to have the greatest "control". will depend on how displayControl works
+ * The only error-checking this module provides is not allowing a mark to be
+ * placed in an already occupied cell. 
  */
 const gameBoard = (function () {
     const grid = [
@@ -55,11 +55,6 @@ const gameBoard = (function () {
      * @returns Boolean
      */
     function isBlank(i, j) {
-        if (i < 0 || j < 0 || i > 2 || j > 2 || 
-            !Number.isInteger(i) || !Number.isInteger(j)
-        )
-            throw Error("Grid indices must be integers between 0 and 2, inclusive");
-
         return grid[i][j] === null;
     }
     
@@ -68,19 +63,15 @@ const gameBoard = (function () {
      * @param {Number} i 
      * @param {Number} j 
      * @param {String} mark 
+     * @returns Boolean for whether placing the mark is successful 
      */
     function placeMark(i, j, mark) {
-        if (i < 0 || j < 0 || i > 2 || j > 2 || 
-            !Number.isInteger(i) || !Number.isInteger(j)
-        )
-            throw Error("Grid indices must be integers between 0 and 2, inclusive");
-        if (mark !== MARK_X && mark !== MARK_O) 
-            throw Error(`Mark must be either '${MARK_X}' or '${MARK_O}'`);
         if (!isBlank(i, j)) 
-            throw Error(`Grid cell (${i}, ${j}) is not blank`);
+            return false;
 
         grid[i][j] = mark;
         numMarks++;
+        return true;
     }
 
     function resetBoard() {
@@ -108,8 +99,6 @@ const gameBoard = (function () {
     }
 
     /**
-     * This function returns at most 1 winner (that is: no winner or one of "x"
-     * or "o" is the winner, but no two winners)
      * @returns "x" or "o" or null
      */
     function computeWinningMark() {
@@ -129,8 +118,8 @@ const gameBoard = (function () {
     }
 
     return {
-        placeMark, computeState, resetBoard, getGridCopy,
-        getPossibleStates, getValidMarks
+        placeMark, computeState, resetBoard, 
+        getGridCopy, getPossibleStates, getValidMarks
     };
 })();
 
@@ -217,32 +206,28 @@ const gameControl = (function () {
             throw Error("A game has not started yet");
         
         const markToPlace = (turn === 1) ? MARK_X : MARK_O;
-        gameBoard.placeMark(i, j, markToPlace);
+        const placingSuccessful = gameBoard.placeMark(i, j, markToPlace);
+        if (!placingSuccessful)
+            return false;
         
         const gameState = gameBoard.computeState();
-        let statusMsg = null;
         switch (gameState) {
             case boardStates.ongoing: 
                 toggleTurn();
-                return statusMsg;
-
+                break;
             case boardStates.xWin:
                 player1.incrementScore();
-                statusMsg = 
-                    `"${player1.getName()}" (${MARK_X}) has won the game!`;
+                endGame();
                 break;
             case boardStates.oWin:
                 player2.incrementScore();
-                statusMsg = 
-                    `"${player2.getName()}" (${MARK_O}) has won the game!`;
+                endGame();
                 break;
             case boardStates.tie:
-                statusMsg = "The game is a tie!";
+                endGame();
                 break;
         }
-
-        endGame();
-        return statusMsg;
+        return gameState;
     }
 
     function endGame() {
@@ -263,7 +248,7 @@ const gameControl = (function () {
     }
 
     return {
-        createPlayers, playGame, endGame, playTurn, 
+        createPlayers, playGame, playTurn, endGame, 
         getPlayerData, hasGameBegun, getTurn
     };
     
@@ -271,6 +256,8 @@ const gameControl = (function () {
 
 const gameDisplay = (function () {
     const [MARK_X, MARK_O] = gameBoard.getValidMarks();
+    const boardStates = gameBoard.getPossibleStates();
+
 
     const grid = document.querySelector("#ttt-grid");
     const alert = document.querySelector("#alert-box > p");
@@ -304,6 +291,7 @@ const gameDisplay = (function () {
 
             playersButton.parentElement.removeChild(playersButton);
             restartButton.style["visibility"] = "visible";
+            alert.textContent = "";
         }
 
         playersForm.reset(); 
@@ -341,28 +329,42 @@ const gameDisplay = (function () {
         alert.textContent = ""; // Clear any prior alert message
         const [i, j] = [cellElement.getAttribute("data-i"), 
             cellElement.getAttribute("data-j")].map(Number);
-        
-        try {
-            const statusMsg = gameControl.playTurn(i, j);
-            update();
-            if (statusMsg === null)
-                return; // game is ongoing
-    
-            handleGameEnd(statusMsg);
-        }
-        catch (err) {
+        const gameStatus = gameControl.playTurn(i, j);
+        if (!gameStatus){
             alert.textContent = "That spot is already filled";
             return;
-        }        
+        }
+
+        update();
+        if (gameStatus === boardStates.ongoing) {
+            return;
+        }
+
+        handleGameEnd(gameStatus);
     }
 
     const resultsDialog = document.querySelector("#results-dialog");
-    function handleGameEnd(text) {
-        resultsDialog.showModal();
+    function handleGameEnd(gameStatus) {
         const line1 = resultsDialog.querySelector("#results-line-1");
         const line2 = resultsDialog.querySelector("#results-line-2");
-        line1.textContent = text;
+
         const {player1: p1Data, player2: p2Data} = gameControl.getPlayerData();
+        let statusMsg;
+        switch (gameStatus) {
+            case boardStates.xWin: statusMsg =
+                `"${p1Data.name}" (${MARK_X}) has won the game!`;
+                break;
+            case boardStates.oWin: statusMsg =
+                `"${p2Data.name}" (${MARK_O}) has won the game!`;
+                break;
+            case boardStates.tie: statusMsg = 
+                `The game is a tie!`;
+                break;
+
+        }
+
+        resultsDialog.showModal();
+        line1.textContent = statusMsg;
         line2.textContent = 
             `"${p1Data.name}" ${p1Data.score} | ${p2Data.score} "${p2Data.name}"`;
     }
