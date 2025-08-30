@@ -177,6 +177,10 @@ const gameControl = (function () {
         turn = (turn === 1) ? 2 : 1;
     }
 
+    function getTurn() {
+        return turn;
+    }
+
     /**
      * Error handling on the arguments are done by the createPlayer factory func
      * @param {String} name1 
@@ -260,12 +264,13 @@ const gameControl = (function () {
 
     return {
         createPlayers, playGame, endGame, playTurn, 
-        getPlayerData, hasGameBegun,
+        getPlayerData, hasGameBegun, getTurn
     };
     
 })();
 
 const gameDisplay = (function () {
+    const [MARK_X, MARK_O] = gameBoard.getValidMarks();
 
     const grid = document.querySelector("#ttt-grid");
     const alert = document.querySelector("#alert-box > p");
@@ -295,6 +300,7 @@ const gameDisplay = (function () {
             const [p1name, p2name] = [formData.get("p1name"), formData.get("p2name")];
             gameControl.createPlayers(p1name, p2name); 
             gameControl.playGame();
+            update();
 
             playersButton.parentElement.removeChild(playersButton);
             restartButton.style["visibility"] = "visible";
@@ -310,7 +316,7 @@ const gameDisplay = (function () {
         alert.textContent = "Game has restarted!";
     });
 
-    // @NOTE: each function here will probably be an event listener
+    const turnIndicator = document.querySelector("#turn-container > span");
     function update() {
         const gameArray = gameBoard.getGridCopy();
         for (let i = 0; i < 3; i++) {
@@ -319,6 +325,8 @@ const gameDisplay = (function () {
                 cell.textContent = gameArray[i][j];
             }
         }  
+        turnIndicator.textContent = 
+            (gameControl.getTurn() === 1) ? MARK_X : MARK_O;
     }
 
 
