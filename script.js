@@ -216,7 +216,7 @@ const gameControl = (function () {
         gameBoard.placeMark(i, j, markToPlace);
         
         const gameState = gameBoard.computeState();
-        let statusMsg = "";
+        let statusMsg = null;
         switch (gameState) {
             case boardStates.ongoing: 
                 toggleTurn();
@@ -238,7 +238,6 @@ const gameControl = (function () {
         }
 
         endGame();
-        statusMsg += `<br>The score is: "${player1.getName()}" ${player1.getScore()} | ${player2.getScore()} "${player2.getName()}"`;
         return statusMsg;
     }
 
@@ -246,16 +245,22 @@ const gameControl = (function () {
         turn = null;
     }
 
-    function getPlayerScores() {
+    function getPlayerData() {
         return {
-            p1Score: player1.getScore(),
-            p2Score: player2.getScore()
+            player1: {
+                name: player1.getName(),
+                score: player1.getScore()
+            },
+            player2: {
+                name: player2.getName(),
+                score: player2.getScore()
+            },
         }
     }
 
     return {
         createPlayers, playGame, endGame, playTurn, 
-        getPlayerScores, hasGameBegun,
+        getPlayerData, hasGameBegun,
     };
     
 })();
@@ -331,13 +336,37 @@ const gameDisplay = (function () {
         
         try {
             const statusMsg = gameControl.playTurn(i, j);
-            alert.innerHTML = statusMsg; // no JS injection I think; no user input!
             update();
+            if (statusMsg === null)
+                return; // game is ongoing
+    
+            handleGameEnd(statusMsg);
         }
         catch (err) {
             alert.textContent = "That spot is already filled";
-        }
+            return;
+        }        
     }
+
+    const resultsDialog = document.querySelector("#results-dialog");
+    function handleGameEnd(text) {
+        resultsDialog.showModal();
+        const line1 = resultsDialog.querySelector("#results-line-1");
+        const line2 = resultsDialog.querySelector("#results-line-2");
+        line1.textContent = text;
+        const {player1: p1Data, player2: p2Data} = gameControl.getPlayerData();
+        line2.textContent = 
+            `"${p1Data.name}" ${p1Data.score} | ${p2Data.score} "${p2Data.name}"`;
+    }
+
+    const playAgainBtn = resultsDialog.querySelector("#play-again-btn");
+    playAgainBtn.addEventListener("click", (evt) => {
+        resultsDialog.close();
+        gameControl.endGame();
+        gameControl.playGame();
+        update();
+        alert.textContent = "";
+    });
 
 
     return {
