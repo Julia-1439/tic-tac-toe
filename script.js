@@ -196,10 +196,10 @@ const gameControl = (function () {
     }
 
     /**
-     * Error handling for the indices is done by the gameBoard module,
-     * including collision checking
      * @param {Number} i 
      * @param {Number} j 
+     * @returns either a status belonging to gameBoard.getPossibleStates() or, 
+     * if the cell requested is already occupied, then false
      */
     function playTurn(i, j) {
         if (!hasGameBegun())
@@ -248,10 +248,9 @@ const gameControl = (function () {
     }
 
     return {
-        createPlayers, playGame, playTurn, endGame, 
-        getPlayerData, hasGameBegun, getTurn
+        createPlayers, hasGameBegun, playGame, playTurn, getTurn, 
+        endGame, getPlayerData
     };
-    
 })();
 
 const gameDisplay = (function () {
