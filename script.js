@@ -63,7 +63,8 @@ const gameBoard = (function () {
      * @param {Number} i 
      * @param {Number} j 
      * @param {String} mark 
-     * @returns Boolean for whether placing the mark is successful 
+     * @returns a state from `states` or, if attempted to place a mark in an
+     * already occupied cell, false 
      */
     function placeMark(i, j, mark) {
         if (!isBlank(i, j)) 
@@ -71,7 +72,7 @@ const gameBoard = (function () {
 
         grid[i][j] = mark;
         numMarks++;
-        return true;
+        return computeState();
     }
 
     function resetBoard() {
@@ -88,7 +89,7 @@ const gameBoard = (function () {
         const isTie = winningMark === null && numMarks === 9;
         
         if (winningMark) {
-            return winningMark === MARK_X ? states.xWin : states.oWin;
+            return (winningMark === MARK_X) ? states.xWin : states.oWin;
         }
         else if (isTie) {
             return states.tie;
@@ -118,7 +119,7 @@ const gameBoard = (function () {
     }
 
     return {
-        placeMark, computeState, resetBoard, 
+        placeMark, resetBoard, 
         getGridCopy, getPossibleStates, getValidMarks
     };
 })();
@@ -209,11 +210,10 @@ const gameControl = (function () {
             throw Error("A game has not started yet");
         
         const markToPlace = (turn === 1) ? MARK_X : MARK_O;
-        const placingSuccessful = gameBoard.placeMark(i, j, markToPlace);
-        if (!placingSuccessful)
+        const gameState = gameBoard.placeMark(i, j, markToPlace);
+        if (!gameState)
             return false;
         
-        const gameState = gameBoard.computeState();
         switch (gameState) {
             case boardStates.ongoing: 
                 toggleTurn();
