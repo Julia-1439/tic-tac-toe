@@ -1,3 +1,36 @@
+/* ========================================================================== */
+/* Normalization */
+/* ========================================================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  line-height: 1.5; /* Accessibile line height */
+  -webkit-font-smoothing: antialiased; /* Improve text rendering on macOS */
+}
+
+img, 
+svg {
+  /* display: block; */ /* Break glass in case of emergency */
+}
+
+p, 
+h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word; /* Avoid interfere with layout (e.g. scrollbar) */
+}
+
+input, button {
+  font: inherit;
+}
+
+/* ========================================================================== */
+/* Main styling starts here */
+/* ========================================================================== */
+
 
 html {
   --cell-size: 100px;
