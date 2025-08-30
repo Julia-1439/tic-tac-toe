@@ -254,11 +254,17 @@ const gameControl = (function () {
     }
 
     return {
-        createPlayers, hasGameBegun, playGame, playTurn, getNextMark, 
-        endGame, getPlayerData
+        createPlayers, 
+        hasGameBegun, 
+        playGame, 
+        playTurn, 
+        getNextMark, 
+        endGame, 
+        getPlayerData
     };
 })();
 
+// @TODO refactor this whole module because it kind of got out of hand
 const gameDisplay = (function () {
     const [MARK_X, MARK_O] = gameBoard.getValidMarks();
     const boardStates = gameBoard.getPossibleStates();
