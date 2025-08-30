@@ -8,12 +8,18 @@
   <script src="script.js" defer></script>
 </head>
 <body>
-  <button autofocus type="button" id="open-create-players">
-    Start Game
-  </button>
-  <button type="button" id="restart-game">
-    Restart Game
-  </button>
+  <header>
+    <h1>Tic Tac Toe</h1>
+    <div>
+      <button autofocus type="button" id="open-create-players">
+        Start Game
+      </button>
+      <button type="button" id="restart-game">
+        Restart Game
+      </button>
+    </div>
+  </header>
+  
   <dialog id="create-players-dialog">
     <form method="dialog">
       <label for="p1name">
@@ -33,20 +39,22 @@
     <button type="button" id="play-again-btn">Play Again?</button>
   </dialog>
 
-  <div id="turn-container">Turn: <span></span></div>
-  <div id="ttt-grid">
-    <div class="ttt-cell" data-i="0" data-j="0"></div>
-    <div class="ttt-cell" data-i="0" data-j="1"></div>
-    <div class="ttt-cell" data-i="0" data-j="2"></div>
-    <div class="ttt-cell" data-i="1" data-j="0"></div>
-    <div class="ttt-cell" data-i="1" data-j="1"></div>
-    <div class="ttt-cell" data-i="1" data-j="2"></div>
-    <div class="ttt-cell" data-i="2" data-j="0"></div>
-    <div class="ttt-cell" data-i="2" data-j="1"></div>
-    <div class="ttt-cell" data-i="2" data-j="2"></div>
-  </div>
-  <div id="alert-box">
-    <p></p>
-  </div>
+  <main>
+    <div id="ttt-grid">
+      <div class="ttt-cell" data-i="0" data-j="0"></div>
+      <div class="ttt-cell" data-i="0" data-j="1"></div>
+      <div class="ttt-cell" data-i="0" data-j="2"></div>
+      <div class="ttt-cell" data-i="1" data-j="0"></div>
+      <div class="ttt-cell" data-i="1" data-j="1"></div>
+      <div class="ttt-cell" data-i="1" data-j="2"></div>
+      <div class="ttt-cell" data-i="2" data-j="0"></div>
+      <div class="ttt-cell" data-i="2" data-j="1"></div>
+      <div class="ttt-cell" data-i="2" data-j="2"></div>
+    </div>
+    <div id="alert-box">
+      <p></p>
+    </div>
+    <div id="turn-container">Turn: <span></span></div>
+  </main>
 </body>
 </html>
