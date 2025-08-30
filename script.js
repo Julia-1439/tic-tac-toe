@@ -119,8 +119,11 @@ const gameBoard = (function () {
     }
 
     return {
-        placeMark, resetBoard, 
-        getGridCopy, getPossibleStates, getValidMarks
+        placeMark, 
+        resetBoard, 
+        getGridCopy, 
+        getPossibleStates, 
+        getValidMarks
     };
 })();
 
