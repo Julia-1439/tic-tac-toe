@@ -51,13 +51,10 @@ body {
 
 header {
   padding: var(--primary-gap-size);
-  min-width: max-content;
-  
   display: grid;
-  grid-template-rows: min-content min-content;
-  gap: 6vmin;
+  grid-template-rows: repeat(2, min-content);
+  gap: 40px;
   justify-items: center;
-
 
   background-color: brown;
   background-image: url(assets/header-background.jpg);
@@ -81,8 +78,8 @@ h1 {
   font-size: 1.15rem;
   color: white;
 
-  width: 13vw;
-  min-width: max-content;
+  width: 100%; /* ensures both Play & Restart buttons are the same size */
+  min-width: max-content; /* prevent text reflows on smaller windows */
   height: var(--major-btn-height);
   padding: 8px 16px;
   border: none;
