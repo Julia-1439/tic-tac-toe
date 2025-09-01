@@ -190,10 +190,7 @@ main {
   gap: var(--grid-gap-size);
 
   color: black;
-  background: #C86578;
-  background: -moz-radial-gradient(center, #C86578 0%, #69353F 100%);
-  background: -webkit-radial-gradient(center, #C86578 0%, #69353F 100%);
-  background: radial-gradient(ellipse at center, #C86578 0%, #69353F 100%);
+  background: black;
 }
 
 .ttt-cell {
