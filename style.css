@@ -33,7 +33,8 @@ html {
 
   --major-btn-height: 3rem;
   --primary-gap-size: 1.5rem;
-  --grid-gap-size: 1.5rem;
+  --grid-size: min(40vw, 25rem); /* allows grid enlarging until 40vw exceeds 25rem (via expanding the viewport width OR zooming in) */
+  --grid-gap-size: min(1.5vw, 1rem); /* allows grid enlarging until 1.5vw exceeds 1rem (via expanding the viewport width OR zooming in) */
 
   --palette-dark-gray: #636363; 
   --palette-light-gray: #E2E8F0; 
@@ -189,11 +190,12 @@ main > div {
 
 #ttt-grid {
   padding: var(--grid-gap-size);
-  border-radius: 20px;
+  border-radius: var(--grid-gap-size);
 
   display: grid;
-  min-width: 100%;
-  grid-template: repeat(3, 120px) / repeat(3, 120px);
+  width: var(--grid-size);
+  height: var(--grid-size);
+  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
   gap: var(--grid-gap-size);
 
   color: black;
@@ -207,15 +209,19 @@ main > div {
   background-color: var(--palette-light-gray);
 }
 
+.ttt-cell svg {
+  display: block; /* Remove the slight bottom margin on inline elements */
+}
+
 .notif-text {
-  height: 3rem;
+  height: 3.4rem; 
+  width: var(--grid-size);
   border-radius: 4px;
-  width: 100%;
   padding: 8px;
-  font-size: 1.75rem;
+  font-size: 1.35rem;
   font-weight: bold;
   background-color: rgba(0, 0, 0, 0.5);
-  align-self: flex-start;
+  overflow: auto;
 
   display: flex;
   align-items: center;
