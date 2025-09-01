@@ -276,7 +276,7 @@ const gameControl = (function () {
  * The module provides event handlers to receive user input and relay their
  * requests to the gameControl module. 
  */
-const gameDisplay = (function () {
+const gameDisplay = (function (document) {
     const [MARK_X, MARK_O] = gameBoard.getValidMarks();
     const boardStates = gameBoard.getPossibleStates();
 
@@ -428,4 +428,4 @@ const gameDisplay = (function () {
         update();
     });
 
-})();
+})(document);
