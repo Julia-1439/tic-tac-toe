@@ -272,7 +272,7 @@ const gameDisplay = (function () {
 
     const grid = document.querySelector("#ttt-grid");
     const cells = grid.querySelectorAll(".ttt-cell");
-    const alert = document.querySelector("#alert-container > p");
+    const alert = document.querySelector("#alert-container");
     cells.forEach((cell) => {
         cell.addEventListener("click", handleCellClick); // (note)
     }); 
@@ -327,7 +327,6 @@ const gameDisplay = (function () {
                 const cell = grid.querySelector(`[data-i="${i}"][data-j="${j}"]`);
                 const mark = gameArray[i][j];
                 putMark(cell, gameArray[i][j]);
-                // cell.textContent = gameArray[i][j];
             }
         }  
         turnIndicator.textContent = gameControl.getNextMark();
@@ -369,10 +368,10 @@ const gameDisplay = (function () {
         let statusMsg;
         switch (gameStatus) {
             case boardStates.xWin: statusMsg =
-                `"${p1Data.name}" (${MARK_X}) has won the game!`;
+                `Player "${p1Data.name}" (${MARK_X}) has won the game!`;
                 break;
             case boardStates.oWin: statusMsg =
-                `"${p2Data.name}" (${MARK_O}) has won the game!`;
+                `Player "${p2Data.name}" (${MARK_O}) has won the game!`;
                 break;
             case boardStates.tie: statusMsg = 
                 `The game is a tie!`;
@@ -383,7 +382,7 @@ const gameDisplay = (function () {
         resultsDialog.showModal();
         line1.textContent = statusMsg;
         line2.textContent = 
-            `"${p1Data.name}" ${p1Data.score} | ${p2Data.score} "${p2Data.name}"`;
+            `Score: "${p1Data.name}" ${p1Data.score} | ${p2Data.score} "${p2Data.name}"`;
     }
 
     const playAgainBtn = resultsDialog.querySelector("#play-again-btn");

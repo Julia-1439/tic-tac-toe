@@ -13,11 +13,6 @@ body {
   -webkit-font-smoothing: antialiased; /* Improve text rendering on macOS */
 }
 
-img, 
-svg {
-  /* display: block; */ /* Break glass in case of emergency */
-}
-
 p, 
 h1, h2, h3, h4, h5, h6 {
   overflow-wrap: break-word; /* Avoid interfere with layout (e.g. scrollbar) */
@@ -38,16 +33,10 @@ html {
 
   --major-btn-height: 3rem;
   --primary-gap-size: 1.5rem;
-  --cell-size: 125px;
   --grid-gap-size: 1.5rem;
 
-  --palette-dominant: #622EAA; /* Usage: divs */
-  --palette-dominant-dark: #5415ad; /* Usage: Accessories */
-  --palette-dominant-light: #7d52b9; /* Usage: divs */
-  --palette-contrast: #FC8916; /* Usage: link hover, emphasize, highlight */
-  --palette-accent: #D6D2D2; /* Usage: against the dominant color - borders, decorations  */
-  --palette-dark-gray: #636363; /* Usage: divs, text, shadows */
-  --palette-light-gray: #E2E8F0; /* Usage: shadows */
+  --palette-dark-gray: #636363; 
+  --palette-light-gray: #E2E8F0; 
 }
 
 body {
@@ -66,7 +55,8 @@ header {
   display: grid;
   grid-template-rows: min-content min-content;
   gap: 6vmin;
-  justify-content: center;
+  justify-items: center;
+
 
   background-color: brown;
   background-image: url(assets/header-background.jpg);
@@ -74,7 +64,6 @@ header {
   background-size: cover;
 
   color: white;
-  /* box-shadow */
 }
 
 h1 {
@@ -98,18 +87,17 @@ h1 {
   border: none;
   border-radius: calc(var(--major-btn-height) / 2);
   box-shadow: 3px 3px 10px var(--palette-light-gray);
+  -webkit-box-shadow: 3px 3px 10px var(--palette-light-gray);
   background-color: #FFA30F;
 }
 .major-btn:hover {
   filter: saturate(250%);
 }
 .major-btn:active {
-  outline: 2px solid cornflowerblue;
+  outline: 2px solid white;
   outline-offset: 3px;
   filter: revert;
 }
-
-
 
 #restart-game {
   display: none;
@@ -119,10 +107,16 @@ h1 {
 
 dialog {
   margin: auto;
+  position: relative;
   border: none;
   padding: 40px;
+  min-width: 25%;
   border-radius: 20px;
   box-shadow: 0px 2px 11px -3px var(--palette-dark-gray);
+  -webkit-box-shadow: 0px 2px 11px -3px var(--palette-dark-gray);
+}
+::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 dialog form {
@@ -139,21 +133,47 @@ input {
   letter-spacing: 1px;
 }
 
-#form-btns-container {
+.dialog-btns-container {
   display: flex;
   gap: var(--primary-gap-size);
   justify-content: center;
 }
 
-form button {
+.dialog-btns-container button {
+  cursor: pointer;
   display: inline-block;
   width: 40%;
+  background-color: #FFA30F;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 0;
+}
+.dialog-btns-container button:hover {
+  filter: saturate(250%);
+}
+.dialog-btns-container button:active {
+  outline: 2px solid var(--palette-dark-gray);
+  outline-offset: 2px;
+  filter: revert;
+}
+
+#results-dialog article {
+  display: grid;
+  gap: var(--primary-gap-size);
 }
 
 /* ========================================================================== */
-
 main {
+  background-image: url(assets/main-background.jpg); 
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+}
+
+main > div {
   padding: var(--primary-gap-size);
+  height: 100%;
 
   display: flex;
   flex-direction: column;
@@ -161,24 +181,21 @@ main {
   align-items: center;
   gap: var(--primary-gap-size);
   
-  background-image: url(assets/main-background.jpg); 
-  background-size: cover;
-  /* background-color: rgb(245, 222, 179, 0.8); */
   color: white;
 }
 
-#alert-container {
-  height: 1.5rem;
-}
-
-#turn-container {
-  height: 1.5rem;
-}
-
 .notif-text {
-  font-size: 1.25rem;
+  height: 3rem;
+  border-radius: 4px;
+  width: 100%;
+  padding: 8px;
+  font-size: 1.75rem;
   font-weight: bold;
-  background-color: rgba(0, 0, 0, 0.5)
+  background-color: rgba(0, 0, 0, 0.5);
+  align-self: flex-start;
+
+  display: flex;
+  align-items: center;
 }
 
 #ttt-grid {
@@ -186,7 +203,8 @@ main {
   border-radius: 20px;
 
   display: grid;
-  grid-template: repeat(3, 125px) / repeat(3, 125px);
+  min-width: 100%;
+  grid-template: repeat(3, 120px) / repeat(3, 120px);
   gap: var(--grid-gap-size);
 
   color: black;

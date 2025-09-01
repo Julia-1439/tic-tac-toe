@@ -23,16 +23,16 @@
       <div>
         <label for="p1name">
           Player 1 Name
-          <input autofocus required type="text" name="p1name" id="p1name">
+          <input autofocus required maxlength="20" type="text" name="p1name" id="p1name">
         </label>
       </div>
       <div>
         <label for="p2name">
           Player 2 Name
-          <input required type="text" name="p2name" id="p2name">
+          <input required maxlength="20" type="text" name="p2name" id="p2name">
         </label>
       </div>
-      <div id="form-btns-container">
+      <div class="dialog-btns-container">
         <button id="create-players-btn" type="submit">Begin!</button>
         <button formnovalidate type="submit">Cancel</button>
       </div>
@@ -40,27 +40,33 @@
   </dialog>
 
   <dialog id="results-dialog">
-    <p id="results-line-1"></p>
-    <p id="results-line-2"></p>
-    <button type="button" id="play-again-btn">Play Again?</button>
+    <form method="dialog">
+      <p id="results-line-1">&nbsp;</p>
+      <p id="results-line-2">&nbsp;</p>
+      <div class="dialog-btns-container">
+        <button type="button" id="play-again-btn">Play Again?</button>
+        <button type="submit">No Thanks</button>
+      </div>
+    </form>
   </dialog>
 
   <main>
-    <div id="ttt-grid">
-      <div class="ttt-cell" data-i="0" data-j="0"></div>
-      <div class="ttt-cell" data-i="0" data-j="1"></div>
-      <div class="ttt-cell" data-i="0" data-j="2"></div>
-      <div class="ttt-cell" data-i="1" data-j="0"></div>
-      <div class="ttt-cell" data-i="1" data-j="1"></div>
-      <div class="ttt-cell" data-i="1" data-j="2"></div>
-      <div class="ttt-cell" data-i="2" data-j="0"></div>
-      <div class="ttt-cell" data-i="2" data-j="1"></div>
-      <div class="ttt-cell" data-i="2" data-j="2"></div>
+    <div>
+      <div id="ttt-grid">
+        <div class="ttt-cell" data-i="0" data-j="0"></div>
+        <div class="ttt-cell" data-i="0" data-j="1"></div>
+        <div class="ttt-cell" data-i="0" data-j="2"></div>
+        <div class="ttt-cell" data-i="1" data-j="0"></div>
+        <div class="ttt-cell" data-i="1" data-j="1"></div>
+        <div class="ttt-cell" data-i="1" data-j="2"></div>
+        <div class="ttt-cell" data-i="2" data-j="0"></div>
+        <div class="ttt-cell" data-i="2" data-j="1"></div>
+        <div class="ttt-cell" data-i="2" data-j="2"></div>
+      </div>
+      <div id="alert-container" class="notif-text">
+      </div>
+      <div id="turn-container" class="notif-text">Turn:&nbsp;<span></span></div>
     </div>
-    <div id="alert-container" class="notif-text">
-      <p></p>
-    </div>
-    <div id="turn-container" class="notif-text">Turn: <span></span></div>
   </main>
 </body>
 </html>
