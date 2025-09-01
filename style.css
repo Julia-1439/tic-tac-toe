@@ -203,7 +203,7 @@ main > div {
 .ttt-cell {
   background-color: white;
 }
-.ttt-cell:empty:hover {
+.ttt-cell:hover {
   background-color: var(--palette-light-gray);
 }
 
