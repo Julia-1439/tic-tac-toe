@@ -132,6 +132,9 @@ input {
   font-size: 1rem;
   letter-spacing: 1px;
 }
+input[type=text]:focus {
+  outline: 1px solid black;
+}
 
 .dialog-btns-container {
   display: flex;
