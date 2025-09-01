@@ -412,6 +412,12 @@ const gameDisplay = (function () {
     };
 })();
 
+/* 
+@TODO add styling to the ending dialog
+@TODO add styling to the notification indicators
+@TODO refactor gameDisplay module to be less spaghetti
+*/
+
 /* ========================================================================== */
 /* TESTING */
 /* ========================================================================== */
