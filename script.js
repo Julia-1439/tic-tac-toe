@@ -337,7 +337,7 @@ const gameDisplay = (function () {
     // @NOTE: might have to do better error handling, perhaps through some error 
     // messages that gameControl can return for the display to print.
     function handleCellClick(evt) {
-        const cellElement = evt.target;
+        const cellElement = evt.currentTarget;
         if (!gameControl.hasGameBegun()) {
             alert.textContent = "A game has not begun yet!";
             return;
