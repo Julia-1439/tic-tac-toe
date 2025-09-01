@@ -168,14 +168,14 @@ input[type=text]:focus {
 }
 
 /* ========================================================================== */
-main {
+#main-container {
   background-image: url(assets/main-background.jpg); 
   background-size: cover;
   display: flex;
   justify-content: center;
 }
 
-main > div {
+main {
   padding: var(--primary-gap-size);
   height: 100%;
 
