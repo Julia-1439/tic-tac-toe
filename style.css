@@ -187,20 +187,6 @@ main > div {
   color: white;
 }
 
-.notif-text {
-  height: 3rem;
-  border-radius: 4px;
-  width: 100%;
-  padding: 8px;
-  font-size: 1.75rem;
-  font-weight: bold;
-  background-color: rgba(0, 0, 0, 0.5);
-  align-self: flex-start;
-
-  display: flex;
-  align-items: center;
-}
-
 #ttt-grid {
   padding: var(--grid-gap-size);
   border-radius: 20px;
@@ -219,4 +205,18 @@ main > div {
 }
 .ttt-cell:empty:hover {
   background-color: var(--palette-light-gray);
+}
+
+.notif-text {
+  height: 3rem;
+  border-radius: 4px;
+  width: 100%;
+  padding: 8px;
+  font-size: 1.75rem;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.5);
+  align-self: flex-start;
+
+  display: flex;
+  align-items: center;
 }
