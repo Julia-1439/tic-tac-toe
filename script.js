@@ -1,8 +1,3 @@
-/* ========================================================================== */
-/* Factory functions & IIFE modules */
-/* Includes basic error checking which may/may not be necessary */
-/* ========================================================================== */
-
 /**
  * This module is to be controlled by a game controller that should supply 
  * correct inputs in a valid order as defined by the rules of tic-tac-toe. 
@@ -47,24 +42,14 @@ const gameBoard = (function () {
     function getGridCopy() {
         return [...grid];
     }
-
-    /**
-     * 
-     * @param {Number} i 
-     * @param {Number} j 
-     * @returns Boolean
-     */
-    function isBlank(i, j) {
-        return grid[i][j] === null;
-    }
     
     /**
      * 
      * @param {Number} i 
      * @param {Number} j 
-     * @param {String} mark 
-     * @returns a state from `states` or, if attempted to place a mark in an
-     * already occupied cell, false 
+     * @param {String} mark  
+     * @returns a state from `states`; or if attempted to place a mark in an
+     * already occupied cell, false, to signal failure
      */
     function placeMark(i, j, mark) {
         if (!isBlank(i, j)) 
@@ -75,13 +60,22 @@ const gameBoard = (function () {
         return computeState();
     }
 
+    /**
+     * Helper
+     * @param {Number} i 
+     * @param {Number} j 
+     * @returns Boolean
+     */
+    function isBlank(i, j) {
+        return grid[i][j] === null;
+    }
+
     function resetBoard() {
         grid.forEach((row, i) => grid[i] = [null, null, null]);
         numMarks = 0; 
     }
 
     /**
-     * @NOTE room for optimization: moving ongoing case upward
      * @returns one of "xWin", "oWin", "tie", or "ongoing"
      */
     function computeState() {
