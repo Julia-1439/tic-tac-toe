@@ -36,8 +36,18 @@ html {
   height: 100vh;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 
-  --cell-size: 100px;
-  --grid-gap-size: 15px;
+  --major-btn-height: 3rem;
+  --primary-gap-size: 1.5rem;
+  --cell-size: 125px;
+  --grid-gap-size: 1.5rem;
+
+  --palette-dominant: #622EAA; /* Usage: divs */
+  --palette-dominant-dark: #5415ad; /* Usage: Accessories */
+  --palette-dominant-light: #7d52b9; /* Usage: divs */
+  --palette-contrast: #FC8916; /* Usage: link hover, emphasize, highlight */
+  --palette-accent: #D6D2D2; /* Usage: against the dominant color - borders, decorations  */
+  --palette-dark-gray: #636363; /* Usage: divs, text, shadows */
+  --palette-light-gray: #E2E8F0; /* Usage: shadows */
 }
 
 body {
@@ -50,29 +60,114 @@ body {
 
 
 header {
+  padding: var(--primary-gap-size);
+  min-width: max-content;
+  
+  display: grid;
+  grid-template-rows: min-content min-content;
+  gap: 6vmin;
+  justify-content: center;
+
   background-color: brown;
+  background-image: url(assets/header-background.jpg);
+  background-position: center;
+  background-size: cover;
+
   color: white;
+  /* box-shadow */
 }
 
 h1 {
   font-size: 2rem;
-  /* text-shadow: 3px 3px 10px white;  */
+  text-shadow: 1px 1px 40px white; 
+  text-align: center;
 }
 
+.major-btn {
+  cursor: pointer;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 1.15rem;
+  color: white;
+
+  width: 13vw;
+  min-width: max-content;
+  height: var(--major-btn-height);
+  padding: 8px 16px;
+  border: none;
+  border-radius: calc(var(--major-btn-height) / 2);
+  box-shadow: 3px 3px 10px var(--palette-light-gray);
+  background-color: #FFA30F;
+}
+.major-btn:hover {
+  filter: saturate(250%);
+}
+.major-btn:active {
+  outline: 2px solid cornflowerblue;
+  outline-offset: 3px;
+  filter: revert;
+}
+
+
+
 #restart-game {
-  visibility: hidden;
+  display: none;
+}
+
+/* ========================================================================== */
+
+dialog {
+  margin: auto;
+  border: none;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0px 2px 11px -3px var(--palette-dark-gray);
+}
+
+dialog form {
+  display: grid;
+  gap: var(--primary-gap-size);
+}
+
+input {
+  margin: 0 12px;
+  height: 2rem;
+  padding: 8px;
+  border: 1px solid var(--palette-dark-gray);
+  font-size: 1rem;
+  letter-spacing: 1px;
+}
+
+#form-btns-container {
+  display: flex;
+  gap: var(--primary-gap-size);
+  justify-content: center;
+}
+
+form button {
+  display: inline-block;
+  width: 40%;
 }
 
 /* ========================================================================== */
 
 main {
-  background-color: wheat;
-  display: grid;
-  grid-template-rows: repeat(3, min-content);
+  padding: var(--primary-gap-size);
+
+  display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
+  gap: var(--primary-gap-size);
+  
+  background-image: url(assets/main-background.jpg); 
+  background-size: cover;
+  /* background-color: rgb(245, 222, 179, 0.8); */
+  color: white;
 }
 
-#alert-box {
+#alert-container {
   height: 1.5rem;
 }
 
@@ -80,15 +175,25 @@ main {
   height: 1.5rem;
 }
 
+.notif-text {
+  font-size: 1.25rem;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.5)
+}
+
 #ttt-grid {
-  width: min-content;
   padding: var(--grid-gap-size);
+  border-radius: 20px;
 
   display: grid;
-  grid-template: repeat(3, var(--cell-size)) / repeat(3, var(--cell-size));
+  grid-template: repeat(3, 125px) / repeat(3, 125px);
   gap: var(--grid-gap-size);
 
-  background-color: black;
+  color: black;
+  background: #C86578;
+  background: -moz-radial-gradient(center, #C86578 0%, #69353F 100%);
+  background: -webkit-radial-gradient(center, #C86578 0%, #69353F 100%);
+  background: radial-gradient(ellipse at center, #C86578 0%, #69353F 100%);
 }
 
 .ttt-cell {

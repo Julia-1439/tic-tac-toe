@@ -271,16 +271,15 @@ const gameDisplay = (function () {
 
 
     const grid = document.querySelector("#ttt-grid");
-    const alert = document.querySelector("#alert-box > p");
-    grid.addEventListener("click", (evt) => {
-        const target = evt.target;
-        if (!target.classList.contains("ttt-cell")) {
-            return;
-        }
-
-        const cell = target;
-        handleCellClick(cell);
-    });
+    const cells = grid.querySelectorAll(".ttt-cell");
+    const alert = document.querySelector("#alert-container > p");
+    cells.forEach((cell) => {
+        cell.addEventListener("click", handleCellClick); // (note)
+    }); 
+    /*  Note: despite my reluctant to add event listeners to each cell (not as 
+    performant as adding one only to the parent grid), I did it because 
+    otherwise I'm unsure how to ensure the cell receives the click event when I 
+    have an SVG overshadowing the cell that I wish to target. */
 
     const playersButton = document.querySelector("#open-create-players");
     const playersDialog = document.querySelector("#create-players-dialog");
@@ -301,11 +300,16 @@ const gameDisplay = (function () {
             update();
 
             playersButton.parentElement.removeChild(playersButton);
-            restartButton.style["visibility"] = "visible";
+            restartButton.style["display"] = "revert";
             alert.textContent = "";
         }
 
         playersForm.reset(); 
+    });
+    playersForm.addEventListener("formdata", (evt) => {
+        const formData = evt.formData;
+        formData.set("p1name", formData.get("p1name").toUpperCase());
+        formData.set("p2name", formData.get("p2name").toUpperCase());
     });
 
     restartButton.addEventListener("click", (evt) => {
@@ -321,7 +325,9 @@ const gameDisplay = (function () {
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 const cell = grid.querySelector(`[data-i="${i}"][data-j="${j}"]`);
-                cell.textContent = gameArray[i][j];
+                const mark = gameArray[i][j];
+                putMark(cell, gameArray[i][j]);
+                // cell.textContent = gameArray[i][j];
             }
         }  
         turnIndicator.textContent = gameControl.getNextMark();
@@ -330,7 +336,8 @@ const gameDisplay = (function () {
 
     // @NOTE: might have to do better error handling, perhaps through some error 
     // messages that gameControl can return for the display to print.
-    function handleCellClick(cellElement) {
+    function handleCellClick(evt) {
+        const cellElement = evt.target;
         if (!gameControl.hasGameBegun()) {
             alert.textContent = "A game has not begun yet!";
             return;
@@ -387,6 +394,17 @@ const gameDisplay = (function () {
         update();
         alert.textContent = "";
     });
+
+    function putMark(cell, mark) {
+        switch (mark) {
+            case MARK_X: cell.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="2 2 18 18"><title>multiply</title><path d="M16 16H14V15H13V14H12V13H10V14H9V15H8V16H6V14H7V13H8V12H9V10H8V9H7V8H6V6H8V7H9V8H10V9H12V8H13V7H14V6H16V8H15V9H14V10H13V12H14V13H15V14H16Z" fill="black"/></svg>`;
+                break;
+            case MARK_O: cell.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 30 30"><title>circle</title><path d="M15 1V2H17V3H18V4H19V5H20V7H21V15H20V17H19V18H18V19H17V20H15V21H7V20H5V19H4V18H3V17H2V15H1V7H2V5H3V4H4V3H5V2H7V1H15M14 3H8V4H6V5H5V6H4V8H3V14H4V16H5V17H6V18H8V19H14V18H16V17H17V16H18V14H19V8H18V6H17V5H16V4H14V3Z" fill="black"/></svg>`;
+                break;
+            case null: cell.textContent = "";
+                break;
+        }
+    }
 
 
     return {

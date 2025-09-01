@@ -10,26 +10,32 @@
 <body>
   <header>
     <h1>Tic Tac Toe</h1>
-    <div>
-      <button autofocus type="button" id="open-create-players">
-        Start Game
-      </button>
-      <button type="button" id="restart-game">
-        Restart Game
-      </button>
-    </div>
+    <button type="button" id="open-create-players" class="major-btn">
+      Start Game
+    </button>
+    <button type="button" id="restart-game" class="major-btn">
+      Restart Game
+    </button>
   </header>
   
   <dialog id="create-players-dialog">
     <form method="dialog">
-      <label for="p1name">
-        <input autofocus required type="text" name="p1name" id="p1name">
-      </label>
-      <label for="p2name">
-        <input required type="text" name="p2name" id="p2name">
-      </label>
-      <button id="create-players-btn" type="submit">Begin!</button>
-      <button formnovalidate type="submit">Cancel</button>
+      <div>
+        <label for="p1name">
+          Player 1 Name
+          <input autofocus required type="text" name="p1name" id="p1name">
+        </label>
+      </div>
+      <div>
+        <label for="p2name">
+          Player 2 Name
+          <input required type="text" name="p2name" id="p2name">
+        </label>
+      </div>
+      <div id="form-btns-container">
+        <button id="create-players-btn" type="submit">Begin!</button>
+        <button formnovalidate type="submit">Cancel</button>
+      </div>
     </form>
   </dialog>
 
@@ -51,10 +57,10 @@
       <div class="ttt-cell" data-i="2" data-j="1"></div>
       <div class="ttt-cell" data-i="2" data-j="2"></div>
     </div>
-    <div id="alert-box">
+    <div id="alert-container" class="notif-text">
       <p></p>
     </div>
-    <div id="turn-container">Turn: <span></span></div>
+    <div id="turn-container" class="notif-text">Turn: <span></span></div>
   </main>
 </body>
 </html>
