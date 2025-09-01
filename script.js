@@ -1,9 +1,9 @@
 /**
- * This module is to be controlled by a game controller that should supply 
- * correct inputs in a valid order as defined by the rules of tic-tac-toe. 
+ * This module stores the internal game array. It is to be supplied valid inputs
+ * from the gameControl module; valid meaning within the rules of tic-tac-toe. 
  * 
- * Getter methods are provided for the valid marks and game states that are 
- * possible, for usage in gameControl and displayControl modules. 
+ * Getter methods for certain constants and game internals are provided, to be 
+ * utilized by the gameControl and displayControl modules. 
  */
 const gameBoard = (function () {
     const grid = [
@@ -124,12 +124,9 @@ const gameBoard = (function () {
 /**
  * 
  * @param {String} name 
- * Factory function to create 2 players
+ * Factory function used by the gameControl module to create 2 players
  */
 function createPlayer(name) {
-    if (typeof name !== "string")
-        throw Error("Player name must be a string type");
-
     let score = 0;
     
     function getName() {
@@ -150,9 +147,10 @@ function createPlayer(name) {
 }
 
 /**
- * This module provides functions to the displayControl module for it to 
- * create players, start/restart a game, dictate player turn, and retrieve 
- * results. 
+ * This module provides functions to dictate the internal flow of the game: 
+ * creating players, starting/restarting a game, switching player turns,
+ * and tracking scores. These functions are called by the gameDisplay
+ * module when the user interacts with the page.  
  * 
  * Error checks are provided in the functions to provide context for when they 
  * should be used and for testing, but they are not actually used by the game
@@ -241,7 +239,6 @@ const gameControl = (function () {
         return gameState;
     }
 
-
     /**
      * Prevents further player input by nullifying 'turn'. Note that the board
      * is not reset so that players can still view it after game's end. Board
@@ -275,20 +272,21 @@ const gameControl = (function () {
     };
 })();
 
-
+/**
+ * The module provides event handlers to receive user input and relay their
+ * requests to the gameControl module. 
+ */
 const gameDisplay = (function () {
     const [MARK_X, MARK_O] = gameBoard.getValidMarks();
     const boardStates = gameBoard.getPossibleStates();
 
     /* ====================================================================== */
-    /* Module functions */
+    /* update() function: Routinely used by the button & cell event handlers to 
+       update the display each time an internal game change is made or an alert 
+       needs to be displayed. 
     /* ====================================================================== */
 
     /**
-     * Update the grid display based on the game's internals, as provided
-     * by the gameBoard & gameControl modules. 
-     * An optional alert message (default: null) can be displayed, in case of 
-     * user requesting prohibited actions. 
      * @param {String | undefined} alertMsg 
      */
     function update(alertMsg = null) {
@@ -305,12 +303,22 @@ const gameDisplay = (function () {
         turnIndicator.textContent = gameControl.getNextMark();
     }
 
+    function drawContent(cell, content) {
+        switch (content) {
+            case null: cell.textContent = "";
+                break;
+            case MARK_X: cell.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="2 2 18 18"><title>multiply</title><path d="M16 16H14V15H13V14H12V13H10V14H9V15H8V16H6V14H7V13H8V12H9V10H8V9H7V8H6V6H8V7H9V8H10V9H12V8H13V7H14V6H16V8H15V9H14V10H13V12H14V13H15V14H16Z" fill="black"/></svg>`;
+                break;
+            case MARK_O: cell.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 30 30"><title>circle</title><path d="M15 1V2H17V3H18V4H19V5H20V7H21V15H20V17H19V18H18V19H17V20H15V21H7V20H5V19H4V18H3V17H2V15H1V7H2V5H3V4H4V3H5V2H7V1H15M14 3H8V4H6V5H5V6H4V8H3V14H4V16H5V17H6V18H8V19H14V18H16V17H17V16H18V14H19V8H18V6H17V5H16V4H14V3Z" fill="black"/></svg>`;
+                break;
+        }
+    }
+
     /* ====================================================================== */
     /* Add event listeners to DOM elements */
     /* ====================================================================== */
 
-    /* Player data processing =============================================== */
-    /* ====================================================================== */
+    /* Player name processing =============================================== */
 
     const playersButton = document.querySelector("#open-create-players");
     const playersDialog = document.querySelector("#create-players-dialog");
@@ -347,8 +355,6 @@ const gameDisplay = (function () {
     });
 
     /* Restart button ======================================================= */
-    /* ====================================================================== */
-
 
     restartButton.addEventListener("click", (evt) => {
         gameControl.endGame();
@@ -356,8 +362,7 @@ const gameDisplay = (function () {
         update("Game has restarted!");
     });
 
-    /* The main playing field =============================================== */
-    /* ====================================================================== */
+    /* Main playing field =================================================== */
 
     const grid = document.querySelector("#ttt-grid");
     const cells = grid.querySelectorAll(".ttt-cell");
@@ -382,7 +387,7 @@ const gameDisplay = (function () {
             cellElement.getAttribute("data-j")
         ].map(Number);
         const gameState = gameControl.playTurn(i, j);
-        update(!gameState ? "That spot is already filled" : undefined)
+        update(!gameState ? "That spot is already filled" : undefined);
 
         if (gameState === boardStates.xWin || 
             gameState === boardStates.oWin ||
@@ -390,6 +395,8 @@ const gameDisplay = (function () {
         )
             displayResults(gameState);
     }
+
+    /* Results ============================================================== */
 
     const resultsDialog = document.querySelector("#results-dialog");
     const conclusionDisplay = resultsDialog.querySelector("#conclusion");
@@ -417,36 +424,8 @@ const gameDisplay = (function () {
     const playAgainBtn = resultsDialog.querySelector("#play-again-btn");
     playAgainBtn.addEventListener("click", (evt) => {
         resultsDialog.close();
-
         gameControl.playGame();
         update();
     });
 
-    function drawContent(cell, content) {
-        switch (content) {
-            case null: cell.textContent = "";
-                break;
-            case MARK_X: cell.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="2 2 18 18"><title>multiply</title><path d="M16 16H14V15H13V14H12V13H10V14H9V15H8V16H6V14H7V13H8V12H9V10H8V9H7V8H6V6H8V7H9V8H10V9H12V8H13V7H14V6H16V8H15V9H14V10H13V12H14V13H15V14H16Z" fill="black"/></svg>`;
-                break;
-            case MARK_O: cell.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 30 30"><title>circle</title><path d="M15 1V2H17V3H18V4H19V5H20V7H21V15H20V17H19V18H18V19H17V20H15V21H7V20H5V19H4V18H3V17H2V15H1V7H2V5H3V4H4V3H5V2H7V1H15M14 3H8V4H6V5H5V6H4V8H3V14H4V16H5V17H6V18H8V19H14V18H16V17H17V16H18V14H19V8H18V6H17V5H16V4H14V3Z" fill="black"/></svg>`;
-                break;
-        }
-    }
-
-
 })();
-
-/* 
-@TODO add styling to the ending dialog
-@TODO add styling to the notification indicators
-@TODO refactor gameDisplay module to be less spaghetti
-*/
-
-/* ========================================================================== */
-/* TESTING */
-/* ========================================================================== */
-
-function log(expression) {
-    console.log(expression);
-}
-
