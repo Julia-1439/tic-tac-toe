@@ -61,7 +61,6 @@ const gameBoard = (function () {
     }
 
     /**
-     * Helper
      * @param {Number} i 
      * @param {Number} j 
      * @returns Boolean
@@ -150,13 +149,18 @@ function createPlayer(name) {
 }
 
 /**
- * This module provides functions to create players, start/restart a game,
- * and dictate player turn. 
+ * This module provides functions to the displayControl module for it to 
+ * create players, start/restart a game, dictate player turn, and retrieve 
+ * results. 
+ * 
+ * Error checks are provided in the functions to provide context for when they 
+ * should be used and for testing, but they are not actually used by the game
+ * itself. 
  */
 const gameControl = (function () {
     let player1;
     let player2;
-    let turn = null; // used as a proxy for whether a game has started
+    let turn = null; // 1, 2, or null. also a proxy for whether game has started
     const [MARK_X, MARK_O] = gameBoard.getValidMarks();
     const boardStates = gameBoard.getPossibleStates();
 
@@ -173,13 +177,12 @@ const gameControl = (function () {
 
     function getNextMark() {
         if (!hasGameBegun()) 
-            return "";
+            return null;
 
         return (turn === 1) ? MARK_X : MARK_O;
     }
 
     /**
-     * Error handling on the arguments are done by the createPlayer factory func
      * @param {String} name1 
      * @param {String} name2 
      */
@@ -206,8 +209,8 @@ const gameControl = (function () {
     /**
      * @param {Number} i 
      * @param {Number} j 
-     * @returns either a status belonging to gameBoard.getPossibleStates() or, 
-     * if the cell requested is already occupied, then false
+     * @returns if mark placing is successful, a status from boardStates. if
+     * mark placing unsuccessful, then false, signalling failure 
      */
     function playTurn(i, j) {
         if (!hasGameBegun())
@@ -237,8 +240,14 @@ const gameControl = (function () {
         return gameState;
     }
 
+
+    /**
+     * Prevents further player input by nullifying 'turn'. Note that the board
+     * is not reset so that players can still view it after game's end. Board
+     * is only reset when playGame() is called.
+     */
     function endGame() {
-        turn = null;
+        turn = null; 
     }
 
     function getPlayerData() {
