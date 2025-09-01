@@ -121,6 +121,11 @@ const gameBoard = (function () {
     };
 })();
 
+/**
+ * 
+ * @param {String} name 
+ * Factory function to create 2 players
+ */
 function createPlayer(name) {
     if (typeof name !== "string")
         throw Error("Player name must be a string type");
@@ -138,7 +143,9 @@ function createPlayer(name) {
     }
 
     return {
-        getName, incrementScore, getScore
+        getName, 
+        getScore,
+        incrementScore
     };
 }
 
