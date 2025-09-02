@@ -3,7 +3,7 @@
 A tic-tac-toe game created with Javascript IIFE modules
 
 ## Reflection
-major concepts exercises:
+major concepts exercised:
 - closures
 - designing IIFE modules for namespacing & encapsulation
 - factory functions
