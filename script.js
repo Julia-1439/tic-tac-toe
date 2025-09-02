@@ -276,7 +276,7 @@ const gameControl = (function () {
  * The module provides event handlers to receive user input and relay their
  * requests to the gameControl module. 
  */
-const gameDisplay = (function (document) {
+const gameDisplay = (function (doc) {
     const [MARK_X, MARK_O] = gameBoard.getValidMarks();
     const boardStates = gameBoard.getPossibleStates();
 
@@ -320,14 +320,14 @@ const gameDisplay = (function (document) {
 
     /* Player name processing =============================================== */
 
-    const playersButton = document.querySelector("#open-create-players");
-    const playersDialog = document.querySelector("#create-players-dialog");
+    const playersButton = doc.querySelector("#open-create-players");
+    const playersDialog = doc.querySelector("#create-players-dialog");
     playersButton.addEventListener("click", (evt) => {
         playersDialog.showModal();
     });
 
     const playersForm = playersDialog.querySelector("form");
-    const restartButton = document.querySelector("#restart-game");
+    const restartButton = doc.querySelector("#restart-game");
     playersForm.addEventListener("submit", (evt) => {
         if (evt.submitter.id === "create-players-btn") {
             // Retrieve the player names and create the players
@@ -364,10 +364,10 @@ const gameDisplay = (function (document) {
 
     /* Main playing field =================================================== */
 
-    const grid = document.querySelector("#ttt-grid");
+    const grid = doc.querySelector("#ttt-grid");
     const cells = grid.querySelectorAll(".ttt-cell");
-    const alert = document.querySelector("#alert-container");
-    const turnIndicator = document.querySelector("#turn-container > span");
+    const alert = doc.querySelector("#alert-container");
+    const turnIndicator = doc.querySelector("#turn-container > span");
 
     cells.forEach((cell) => {
         cell.addEventListener("click", handleCellClick); 
@@ -398,7 +398,7 @@ const gameDisplay = (function (document) {
 
     /* Results ============================================================== */
 
-    const resultsDialog = document.querySelector("#results-dialog");
+    const resultsDialog = doc.querySelector("#results-dialog");
     const conclusionDisplay = resultsDialog.querySelector("#conclusion");
     const scoreDisplay = resultsDialog.querySelector("#score");
     
